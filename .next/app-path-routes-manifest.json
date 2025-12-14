@@ -1,0 +1,20 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/admin/page": "/admin",
+  "/api/admin/clientes/[id]/route": "/api/admin/clientes/[id]",
+  "/api/admin/orders/[id]/route": "/api/admin/orders/[id]",
+  "/api/admin/orders/route": "/api/admin/orders",
+  "/api/checkout/route": "/api/checkout",
+  "/api/get-next-serial/route": "/api/get-next-serial",
+  "/api/get-prices/route": "/api/get-prices",
+  "/api/get-stock/route": "/api/get-stock",
+  "/api/payment/validate/route": "/api/payment/validate",
+  "/api/shipping/route": "/api/shipping",
+  "/api/stock/route": "/api/stock",
+  "/api/validate-discount/route": "/api/validate-discount",
+  "/checkout/failure/page": "/checkout/failure",
+  "/checkout/pending/page": "/checkout/pending",
+  "/checkout/success/page": "/checkout/success",
+  "/page": "/"
+}

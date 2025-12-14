@@ -1,0 +1,130 @@
+[00:00:00.406] Server  LOG      ✓ Ready in 265ms
+[00:00:23.330] Server  WARN     ⚠ Cross origin request detected from nontolerable-ethan-holies.ngrok-free.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:00:23.951] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:23.951] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:23.952] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:00:23.952] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686807967}
+[00:00:25.019] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:26.121] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:26.121] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
+[00:00:26.122] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"https://nontolerable-ethan-holies.ngrok-free.dev/admin","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686809797}
+[00:00:59.475] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:59.475] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:00:59.475] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686843282}
+[00:01:08.178] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:01:08.178] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:01:08.178] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686852423}
+[00:01:43.957] Server  LOG     [v0] Creating preference with form URL: "https://nontolerable-ethan-holies.ngrok-free.dev"
+[00:01:43.959] Server  LOG     [v0] Preference data: "{\n  \"items\": [\n    {\n      \"title\": \"Buzzy Twist - Edición Limitada\",\n      \"description\": \"Envío gratis - Córdoba Capital\",\n      \"quantity\": 1,\n      \"unit_price\": 5,\n      \"currency_id\": \"ARS\"\n    }\n  ],\n  \"back_urls\": {\n    \"success\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success\",\n    \"failure\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/failure\",\n    \"pending\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/pending\"\n  },\n  \"auto_return\": \"approved\",\n  \"external_reference\": \"cba\",\n  \"statement_descriptor\": \"BUZZY TWIST\",\n  \"payment_methods\": {\n    \"excluded_payment_methods\": [],\n    \"excluded_payment_types\": [],\n    \"installments\": 1\n  },\n  \"additional_info\": \"Completá tus datos de envío en: https://nontolerable-ethan-holies.ngrok-free.dev\"\n}"
+[00:01:44.843] Server  LOG     [v0] Preference created: "188910118-e33b0e52-dacc-410b-bf95-98f6c78e62c5"
+[00:01:45.116] Server  LOG     [checkout] Unit reserved: 10 "Serial:" 10
+[00:01:45.385] Server  LOG     [checkout] Order created successfully: 11 "Unit:" 10
+[00:01:58.133] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:58.133] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:01:58.133] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/checkout/success","route":"/checkout/success"}
+[00:01:58.133] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137194164721&collection_status=approved&payment_id=137194164721&status=approved&external_reference=cba&payment_type=account_money&merchant_order_id=36412087772&preference_id=188910118-e33b0e52-dacc-410b-bf95-98f6c78e62c5&site_id=MLA&processing_mode=aggregator&merchant_account_id=null color: rgb(120, 120, 120) color: inherit {"dp":"/checkout/success","o":"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137194164721&collection_status=approved&payment_id=137194164721&status=approved&external_reference=cba&payment_type=account_money&merchant_order_id=36412087772&preference_id=188910118-e33b0e52-dacc-410b-bf95-98f6c78e62c5&site_id=MLA&processing_mode=aggregator&merchant_account_id=null","r":"https://www.mercadopago.com.ar/checkout/v1/payment/redirect/f12b3aff-ceb1-44f0-adb8-334543ab4d92/congrats/approved/?preference-id=188910118-e33b0e52-dacc-410b-bf95-98f6c78e62c5&router-request-id=fab5a93d-0a01-4084-b24d-f8266b17bc42&p=88151d8ea78440db3c96eece3cc203ac","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686902189}
+[00:01:59.207] Server  LOG     [payment-validate] Unit marked as sold: 10
+[00:01:59.441] Server  LOG     [payment-validate] Payment validated successfully for order: 11
+[00:02:34.335] Server  LOG     [v0] Shipping form received for payment_id: "137194164721"
+[00:02:34.972] Server  LOG     [shipping] Order found: 11
+[00:02:35.517] Server  LOG     [shipping] Client created: 10
+[00:02:35.732] Server  LOG     [v0] Order updated successfully
+[00:02:36.902] Server  LOG     [shipping] Confirmation emails sent successfully to: "TEST@GMAIL.COM"
+[00:02:36.903] Server  ERROR   [v0] "Google Sheets webhook URL not configured (GOOGLE_SHEETS_WEBHOOK_URL)"
+[00:02:37.007] Server  ERROR   [v0] Error sending to Google Sheets: Error: Google Sheets webhook URL not configured (GOOGLE_SHEETS_WEBHOOK_URL)
+[00:02:40.082] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686944640}
+[00:02:51.151] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:02:51.151] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:02:51.151] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765686955377}
+[00:06:19.021] Server  LOG      ✓ Compiled in 43ms
+[00:06:21.128] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:22.079] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:06:22.079] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:06:22.079] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687166026}
+[00:09:09.350] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:09:09.350] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:09:09.350] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:09:09.350] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687333689}
+[00:09:23.698] Server  LOG     [v0] Creating preference with form URL: "https://nontolerable-ethan-holies.ngrok-free.dev"
+[00:09:23.699] Server  LOG     [v0] Preference data: "{\n  \"items\": [\n    {\n      \"title\": \"Buzzy Twist - Edición Limitada\",\n      \"description\": \"Envío gratis - Córdoba Capital\",\n      \"quantity\": 1,\n      \"unit_price\": 5,\n      \"currency_id\": \"ARS\"\n    }\n  ],\n  \"back_urls\": {\n    \"success\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success\",\n    \"failure\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/failure\",\n    \"pending\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/pending\"\n  },\n  \"auto_return\": \"approved\",\n  \"external_reference\": \"cba\",\n  \"statement_descriptor\": \"BUZZY TWIST\",\n  \"payment_methods\": {\n    \"excluded_payment_methods\": [],\n    \"excluded_payment_types\": [],\n    \"installments\": 1\n  },\n  \"additional_info\": \"Completá tus datos de envío en: https://nontolerable-ethan-holies.ngrok-free.dev\"\n}"
+[00:09:24.502] Server  LOG     [v0] Preference created: "188910118-33ec844b-efe6-466b-9ed4-0962adcee701"
+[00:09:24.718] Server  LOG     [checkout] Unit reserved: 11 "Serial:" 11
+[00:09:24.940] Server  LOG     [checkout] Order created successfully: 12 "Unit:" 11
+[00:09:36.317] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:09:36.317] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:09:36.317] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/checkout/success","route":"/checkout/success"}
+[00:09:36.317] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137828548886&collection_status=approved&payment_id=137828548886&status=approved&external_reference=cba&payment_type=account_money&merchant_order_id=36386733467&preference_id=188910118-33ec844b-efe6-466b-9ed4-0962adcee701&site_id=MLA&processing_mode=aggregator&merchant_account_id=null color: rgb(120, 120, 120) color: inherit {"dp":"/checkout/success","o":"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137828548886&collection_status=approved&payment_id=137828548886&status=approved&external_reference=cba&payment_type=account_money&merchant_order_id=36386733467&preference_id=188910118-33ec844b-efe6-466b-9ed4-0962adcee701&site_id=MLA&processing_mode=aggregator&merchant_account_id=null","r":"https://www.mercadopago.com.ar/checkout/v1/payment/redirect/55d8a825-f8b7-433a-8911-e0a257bb30f8/congrats/approved/?preference-id=188910118-33ec844b-efe6-466b-9ed4-0962adcee701&router-request-id=82388f78-0974-4ba6-a55e-6c048c8f5d51&p=88151d8ea78440db3c96eece3cc203ac","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687360411}
+[00:09:37.781] Server  LOG     [payment-validate] Unit marked as sold: 11
+[00:09:38.086] Server  LOG     [payment-validate] Payment validated successfully for order: 12
+[00:09:54.027] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:09:54.027] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:09:54.027] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/checkout/success","route":"/checkout/success"}
+[00:09:54.027] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137828548886&collection_status=approved&payment_id=137828548886&status=approved&external_reference=cba&payment_type=account_money&merchant_order_id=36386733467&preference_id=188910118-33ec844b-efe6-466b-9ed4-0962adcee701&site_id=MLA&processing_mode=aggregator&merchant_account_id=null color: rgb(120, 120, 120) color: inherit {"dp":"/checkout/success","o":"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137828548886&collection_status=approved&payment_id=137828548886&status=approved&external_reference=cba&payment_type=account_money&merchant_order_id=36386733467&preference_id=188910118-33ec844b-efe6-466b-9ed4-0962adcee701&site_id=MLA&processing_mode=aggregator&merchant_account_id=null","r":"https://www.mercadopago.com.ar/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687378154}
+[00:09:55.340] Server  LOG     [payment-validate] Unit marked as sold: 11
+[00:09:55.550] Server  LOG     [payment-validate] Payment validated successfully for order: 12
+[00:10:36.789] Server  LOG     [v0] Shipping form received for payment_id: "137828548886"
+[00:10:37.138] Server  LOG     [shipping] Order found: 12
+[00:10:37.702] Server  LOG     [shipping] Client created: 11
+[00:10:37.930] Server  LOG     [v0] Order updated successfully
+[00:10:39.015] Server  LOG     [shipping] Confirmation emails sent successfully to: "fauspieroni@gmail.com"
+[00:10:39.016] Server  ERROR   [v0] "Google Sheets webhook URL not configured (GOOGLE_SHEETS_WEBHOOK_URL)"
+[00:10:39.085] Server  ERROR   [v0] Error sending to Google Sheets: Error: Google Sheets webhook URL not configured (GOOGLE_SHEETS_WEBHOOK_URL)
+[00:10:48.884] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687433453}
+[00:11:52.064] Server  LOG     [v0] Creating preference with form URL: "https://nontolerable-ethan-holies.ngrok-free.dev"
+[00:11:52.065] Server  LOG     [v0] Preference data: "{\n  \"items\": [\n    {\n      \"title\": \"Buzzy Twist - Edición Limitada\",\n      \"description\": \"Incluye envío - Resto del país\",\n      \"quantity\": 1,\n      \"unit_price\": 5,\n      \"currency_id\": \"ARS\"\n    }\n  ],\n  \"back_urls\": {\n    \"success\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success\",\n    \"failure\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/failure\",\n    \"pending\": \"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/pending\"\n  },\n  \"auto_return\": \"approved\",\n  \"external_reference\": \"interior\",\n  \"statement_descriptor\": \"BUZZY TWIST\",\n  \"payment_methods\": {\n    \"excluded_payment_methods\": [],\n    \"excluded_payment_types\": [],\n    \"installments\": 1\n  },\n  \"additional_info\": \"Completá tus datos de envío en: https://nontolerable-ethan-holies.ngrok-free.dev\"\n}"
+[00:11:52.801] Server  LOG     [v0] Preference created: "188910118-419f5994-8f00-4979-bdf7-9f28d47d0d00"
+[00:11:53.038] Server  LOG     [checkout] Unit reserved: 12 "Serial:" 12
+[00:11:53.266] Server  LOG     [checkout] Order created successfully: 13 "Unit:" 12
+[00:12:04.217] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:04.217] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:04.217] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/checkout/success","route":"/checkout/success"}
+[00:12:04.217] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137828690528&collection_status=approved&payment_id=137828690528&status=approved&external_reference=interior&payment_type=account_money&merchant_order_id=36386760741&preference_id=188910118-419f5994-8f00-4979-bdf7-9f28d47d0d00&site_id=MLA&processing_mode=aggregator&merchant_account_id=null color: rgb(120, 120, 120) color: inherit {"dp":"/checkout/success","o":"https://nontolerable-ethan-holies.ngrok-free.dev/checkout/success?collection_id=137828690528&collection_status=approved&payment_id=137828690528&status=approved&external_reference=interior&payment_type=account_money&merchant_order_id=36386760741&preference_id=188910118-419f5994-8f00-4979-bdf7-9f28d47d0d00&site_id=MLA&processing_mode=aggregator&merchant_account_id=null","r":"https://www.mercadopago.com.ar/checkout/v1/payment/redirect/61a07348-a101-4e46-91f3-168404187847/congrats/approved/?preference-id=188910118-419f5994-8f00-4979-bdf7-9f28d47d0d00&router-request-id=ec14110d-c5c0-4346-8496-33dde39df50a&p=88151d8ea78440db3c96eece3cc203ac","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687508333}
+[00:12:05.016] Server  LOG     [payment-validate] Unit marked as sold: 12
+[00:12:05.254] Server  LOG     [payment-validate] Payment validated successfully for order: 13
+[00:12:48.032] Server  LOG     [v0] Shipping form received for payment_id: "137828690528"
+[00:12:48.539] Server  LOG     [shipping] Order found: 13
+[00:12:49.044] Server  LOG     [shipping] Client created: 12
+[00:12:49.248] Server  LOG     [v0] Order updated successfully
+[00:12:49.932] Server  LOG     [shipping] Confirmation emails sent successfully to: "fauspieroni@gmail.com"
+[00:12:49.933] Server  ERROR   [v0] "Google Sheets webhook URL not configured (GOOGLE_SHEETS_WEBHOOK_URL)"
+[00:12:50.003] Server  ERROR   [v0] Error sending to Google Sheets: Error: Google Sheets webhook URL not configured (GOOGLE_SHEETS_WEBHOOK_URL)
+[00:12:52.081] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://nontolerable-ethan-holies.ngrok-free.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687556661}
+[00:13:08.480] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:08.480] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:13:08.481] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
+[00:13:08.481] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"https://nontolerable-ethan-holies.ngrok-free.dev/admin","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687572573}
+[00:17:00.397] Server  LOG      ✓ Compiled in 25ms
+[00:17:00.715] Server  LOG      ✓ Compiled in 20ms
+[00:17:01.102] Server  LOG      ✓ Compiled in 20ms
+[00:17:01.517] Server  LOG      ✓ Compiled in 21ms
+[00:17:01.968] Server  LOG      ✓ Compiled in 22ms
+[00:17:02.428] Server  LOG      ✓ Compiled in 21ms
+[00:17:02.918] Server  LOG      ✓ Compiled in 25ms
+[00:17:03.125] Browser ERROR   The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
+
+Previous: %s
+Incoming: %s useEffect [, all, all] [, all, all, ]
+[00:17:03.512] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:17:03.520] Browser ERROR   uncaughtError: ReferenceError: isClienteModalOpen is not defined
+[00:17:04.642] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:17:04.642] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:17:04.642] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
+[00:17:04.642] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"https://nontolerable-ethan-holies.ngrok-free.dev/admin","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687808829}
+[00:17:34.177] Server  LOG      ✓ Compiled in 22ms
+[00:18:26.022] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:18:26.022] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:18:26.022] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
+[00:18:26.022] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"https://nontolerable-ethan-holies.ngrok-free.dev/admin","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687890175}
+[00:18:37.188] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:18:37.369] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:18:37.369] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
+[00:18:37.369] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"https://nontolerable-ethan-holies.ngrok-free.dev/admin","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765687902016}
+[00:20:04.724] Server  LOG      ✓ Compiled in 32ms
+[00:20:38.363] Server  LOG      ✓ Compiled in 39ms
+[00:20:38.719] Server  LOG      ✓ Compiled in 22ms
+[00:20:39.151] Server  LOG      ✓ Compiled in 19ms
+[00:21:49.605] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:21:49.605] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:21:49.605] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/admin","route":"/admin"}
+[00:21:49.605] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://nontolerable-ethan-holies.ngrok-free.dev/admin color: rgb(120, 120, 120) color: inherit {"dp":"/admin","o":"https://nontolerable-ethan-holies.ngrok-free.dev/admin","sdkn":"@vercel/analytics/next","sdkv":"1.6.1","sv":"0.1.3","ts":1765688093819}
