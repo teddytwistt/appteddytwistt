@@ -2,14 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, Lock } from "lucide-react"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -21,20 +20,26 @@ export default function LoginPage() {
     setError("")
 
     try {
-      const supabase = createClient()
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
       })
 
-      if (error) {
-        setError("Credenciales incorrectas")
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "Credenciales incorrectas")
         setIsLoading(false)
         return
       }
 
-      if (data.user) {
+      if (data.success) {
         router.push("/admin")
         router.refresh()
       }
@@ -64,18 +69,19 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-300">
-                Email
+              <label htmlFor="username" className="text-sm font-medium text-gray-300">
+                Usuario
               </label>
               <Input
-                id="email"
-                type="email"
-                placeholder="gonzalete@admin.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                placeholder="Gonzalete"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 disabled={isLoading}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-gray-500"
+                autoComplete="off"
               />
             </div>
 
@@ -92,6 +98,7 @@ export default function LoginPage() {
                 required
                 disabled={isLoading}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-gray-500"
+                autoComplete="off"
               />
             </div>
 
