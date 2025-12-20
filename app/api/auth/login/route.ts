@@ -3,17 +3,14 @@ import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json()
+    const { email, password } = await request.json()
 
-    if (!username || !password) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: "Usuario y contraseña son requeridos" },
+        { error: "Email y contraseña son requeridos" },
         { status: 400 }
       )
     }
-
-    // Convertir username a email para Supabase
-    const email = `${username.toLowerCase()}@admin.com`
 
     const supabase = await createClient()
 
