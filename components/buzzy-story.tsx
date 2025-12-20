@@ -1,7 +1,7 @@
 export function BuzzyStory() {
   return (
     <section className="py-12 sm:py-24 border-t border-border">
-      <div className="container px-4">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="relative">
             {/* Decorative elements */}

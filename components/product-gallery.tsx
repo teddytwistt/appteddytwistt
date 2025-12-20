@@ -17,7 +17,7 @@ export function ProductGallery() {
 
   return (
     <section className="py-12 sm:py-24 border-t border-border">
-      <div className="container px-4">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div className="max-w-6xl mx-auto space-y-8 sm:space-y-12">
           <div className="text-center space-y-3 sm:space-y-4">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-balance bg-gradient-to-br from-yellow-400 via-amber-400 to-yellow-600 bg-clip-text text-transparent">

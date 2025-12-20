@@ -59,9 +59,9 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
 
   return (
     <section className="py-24 bg-black">
-      <div className="container px-4">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-left space-y-2 max-w-2xl">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white">Especificaciones</h2>
             <p className="text-lg sm:text-xl text-gray-400">
               Diseñado y fabricado con los más altos estándares de calidad.
@@ -170,7 +170,7 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
       </div>
 
       <footer className="mt-24 border-t border-zinc-800 py-12">
-        <div className="container px-4">
+        <div className="w-full max-w-7xl mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-4">
             <div className="flex items-center justify-center gap-3">
               <img src="/images/logo-alpha.webp" alt="TeddyTwist Logo" className="w-12 h-12 object-contain" />

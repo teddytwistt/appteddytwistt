@@ -196,7 +196,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
         />
       </div>
 
-      <div className="container relative z-10 px-4 py-12 md:py-24">
+      <div className="w-full max-w-7xl mx-auto relative z-10 px-4 py-12 md:py-24">
         <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
           <div className="relative">
             <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
