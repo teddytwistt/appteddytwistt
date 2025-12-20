@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -14,11 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag } from "lucide-react"
+import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut } from "lucide-react"
 import type { PedidoCompleto, StockStatus, Cliente } from "@/lib/types"
 import { formatArgentinaDateTime } from "@/lib/utils/timezone"
 
 export default function AdminPage() {
+  const router = useRouter()
   const [orders, setOrders] = useState<PedidoCompleto[]>([])
   const [filteredOrders, setFilteredOrders] = useState<PedidoCompleto[]>([])
   const [stockStatus, setStockStatus] = useState<StockStatus | null>(null)
@@ -40,6 +43,13 @@ export default function AdminPage() {
   useEffect(() => {
     applyFilters()
   }, [orders, estadoPagoFilter, estadoEnvioFilter, searchQuery])
+
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push("/login")
+    router.refresh()
+  }
 
   const fetchData = async () => {
     setIsLoading(true)
@@ -154,9 +164,15 @@ export default function AdminPage() {
             <p className="text-muted-foreground">Gestión de pedidos Buzzy Twist</p>
           </div>
 
-          <Button onClick={fetchData} variant="outline">
-            Actualizar
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={fetchData} variant="outline">
+              Actualizar
+            </Button>
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
+              <LogOut className="w-4 h-4" />
+              Cerrar Sesión
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
