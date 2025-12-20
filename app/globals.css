@@ -122,6 +122,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  .container {
+    @apply mx-auto max-w-7xl;
+  }
 }
 
 /* Floating animation for mobile parallax */
