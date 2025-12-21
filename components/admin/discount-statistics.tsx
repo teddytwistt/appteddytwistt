@@ -60,6 +60,10 @@ export function DiscountStatistics() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const codesPerPage = 10
+
   // Form state for new discount code
   const [newCode, setNewCode] = useState({
     codigo: "",
@@ -167,6 +171,17 @@ export function DiscountStatistics() {
       code.descripcion?.toLowerCase().includes(query)
     )
   }) || []
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredCodes.length / codesPerPage)
+  const startIndex = (currentPage - 1) * codesPerPage
+  const endIndex = startIndex + codesPerPage
+  const paginatedCodes = filteredCodes.slice(startIndex, endIndex)
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery])
 
   if (isLoading) {
     return (
@@ -327,7 +342,7 @@ export function DiscountStatistics() {
       </div>
 
       {/* Charts */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>Uso de Códigos de Descuento</CardTitle>
@@ -348,18 +363,6 @@ export function DiscountStatistics() {
           <CardContent>
             <div className="h-[300px]">
               <Bar data={revenueChartData} options={chartOptions} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Descuento Total Otorgado</CardTitle>
-            <CardDescription>Monto total descontado por código</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <Bar data={discountGivenChartData} options={chartOptions} />
             </div>
           </CardContent>
         </Card>
@@ -419,19 +422,18 @@ export function DiscountStatistics() {
                   <TableHead>Usos Exitosos</TableHead>
                   <TableHead>Ingresos</TableHead>
                   <TableHead>Descuento Otorgado</TableHead>
-                  <TableHead>Promedio/Pedido</TableHead>
                   <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCodes.length === 0 ? (
+                {paginatedCodes.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={11} className="text-center text-muted-foreground">
+                    <TableCell colSpan={10} className="text-center text-muted-foreground">
                       {searchQuery ? "No se encontraron códigos con esa búsqueda" : "No hay códigos de descuento"}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredCodes.map((code) => (
+                  paginatedCodes.map((code) => (
                     <TableRow key={code.id}>
                       <TableCell className="font-mono font-semibold">{code.codigo}</TableCell>
                       <TableCell>
@@ -469,7 +471,6 @@ export function DiscountStatistics() {
                       <TableCell className="font-semibold text-red-600">
                         ${code.total_discount_given.toLocaleString("es-AR")}
                       </TableCell>
-                      <TableCell>${Math.round(code.average_order_value).toLocaleString("es-AR")}</TableCell>
                       <TableCell>
                         <Button
                           variant={code.activo ? "outline" : "default"}
@@ -485,6 +486,36 @@ export function DiscountStatistics() {
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination Controls */}
+          {filteredCodes.length > 0 && (
+            <div className="flex items-center justify-between pt-4">
+              <div className="text-sm text-muted-foreground">
+                Mostrando {startIndex + 1} a {Math.min(endIndex, filteredCodes.length)} de {filteredCodes.length} códigos
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Anterior
+                </Button>
+                <div className="text-sm font-medium px-3">
+                  Página {currentPage} de {totalPages}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Siguiente
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
