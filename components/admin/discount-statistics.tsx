@@ -121,8 +121,12 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
           codigo: newCode.codigo.toUpperCase(),
           porcentaje_descuento: parseInt(newCode.porcentaje_descuento),
           usos_maximos: newCode.usos_maximos ? parseInt(newCode.usos_maximos) : null,
-          valido_desde: newCode.valido_desde ? new Date(newCode.valido_desde).toISOString() : new Date().toISOString(),
-          valido_hasta: newCode.valido_hasta ? new Date(newCode.valido_hasta).toISOString() : null,
+          valido_desde: newCode.valido_desde && newCode.valido_desde.trim() !== ""
+            ? new Date(newCode.valido_desde).toISOString()
+            : new Date().toISOString(),
+          valido_hasta: newCode.valido_hasta && newCode.valido_hasta.trim() !== ""
+            ? new Date(newCode.valido_hasta).toISOString()
+            : null,
           descripcion: newCode.descripcion || null,
           activo: newCode.activo,
         }),
