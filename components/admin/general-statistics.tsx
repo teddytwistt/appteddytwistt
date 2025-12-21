@@ -276,7 +276,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
       </Card>
 
       {/* Geography and Status Charts */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>Ingresos por Zona</CardTitle>

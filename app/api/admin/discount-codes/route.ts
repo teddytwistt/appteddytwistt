@@ -10,8 +10,6 @@ export async function POST(request: Request) {
       codigo,
       porcentaje_descuento,
       usos_maximos,
-      valido_desde,
-      valido_hasta,
       descripcion,
       activo,
     } = body
@@ -54,8 +52,6 @@ export async function POST(request: Request) {
         activo: activo !== undefined ? activo : true,
         usos_maximos: usos_maximos || null,
         veces_usado: 0,
-        valido_desde: valido_desde || new Date().toISOString(),
-        valido_hasta: valido_hasta || null,
         descripcion: descripcion || null,
       })
       .select()

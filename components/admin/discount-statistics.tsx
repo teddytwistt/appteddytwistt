@@ -28,8 +28,6 @@ interface DiscountCodeStats {
   activo: boolean
   usos_maximos?: number
   veces_usado: number
-  valido_desde: string
-  valido_hasta?: string
   descripcion?: string
   created_at: string
   total_uses: number
@@ -78,8 +76,6 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
     codigo: "",
     porcentaje_descuento: "",
     usos_maximos: "",
-    valido_desde: "",
-    valido_hasta: "",
     descripcion: "",
     activo: true,
   })
@@ -121,12 +117,6 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
           codigo: newCode.codigo.toUpperCase(),
           porcentaje_descuento: parseInt(newCode.porcentaje_descuento),
           usos_maximos: newCode.usos_maximos ? parseInt(newCode.usos_maximos) : null,
-          valido_desde: newCode.valido_desde && newCode.valido_desde.trim() !== ""
-            ? new Date(newCode.valido_desde).toISOString()
-            : new Date().toISOString(),
-          valido_hasta: newCode.valido_hasta && newCode.valido_hasta.trim() !== ""
-            ? new Date(newCode.valido_hasta).toISOString()
-            : null,
           descripcion: newCode.descripcion || null,
           activo: newCode.activo,
         }),
@@ -154,8 +144,6 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
       codigo: "",
       porcentaje_descuento: "",
       usos_maximos: "",
-      valido_desde: "",
-      valido_hasta: "",
       descripcion: "",
       activo: true,
     })
@@ -420,8 +408,6 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
                   <TableHead>Código</TableHead>
                   <TableHead>Descuento</TableHead>
                   <TableHead>Estado</TableHead>
-                  <TableHead>Válido Desde</TableHead>
-                  <TableHead>Válido Hasta</TableHead>
                   <TableHead>Usos</TableHead>
                   <TableHead>Usos Exitosos</TableHead>
                   <TableHead>Ingresos</TableHead>
@@ -432,7 +418,7 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
               <TableBody>
                 {paginatedCodes.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
                       {searchQuery ? "No se encontraron códigos con esa búsqueda" : "No hay códigos de descuento"}
                     </TableCell>
                   </TableRow>
@@ -445,22 +431,6 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
                       </TableCell>
                       <TableCell>
                         <Badge variant={code.activo ? "default" : "secondary"}>{code.activo ? "Activo" : "Inactivo"}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm whitespace-nowrap">
-                        {new Date(code.valido_desde).toLocaleDateString("es-AR", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric"
-                        })}
-                      </TableCell>
-                      <TableCell className="text-sm whitespace-nowrap">
-                        {code.valido_hasta
-                          ? new Date(code.valido_hasta).toLocaleDateString("es-AR", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric"
-                            })
-                          : "Sin límite"}
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
@@ -581,28 +551,6 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
                 placeholder="Ej: 100"
                 value={newCode.usos_maximos}
                 onChange={(e) => setNewCode({ ...newCode, usos_maximos: e.target.value })}
-                disabled={isCreating}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="valido_desde">Válido Desde (opcional)</Label>
-              <Input
-                id="valido_desde"
-                type="datetime-local"
-                value={newCode.valido_desde}
-                onChange={(e) => setNewCode({ ...newCode, valido_desde: e.target.value })}
-                disabled={isCreating}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="valido_hasta">Válido Hasta (opcional)</Label>
-              <Input
-                id="valido_hasta"
-                type="datetime-local"
-                value={newCode.valido_hasta}
-                onChange={(e) => setNewCode({ ...newCode, valido_hasta: e.target.value })}
                 disabled={isCreating}
               />
             </div>
