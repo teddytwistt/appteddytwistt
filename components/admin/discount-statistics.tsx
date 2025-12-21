@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   Dialog,
@@ -446,14 +447,12 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
                         ${code.total_discount_given.toLocaleString("es-AR")}
                       </TableCell>
                       <TableCell>
-                        <div className="flex gap-2">
-                          <Button
-                            variant={code.activo ? "outline" : "default"}
-                            size="sm"
-                            onClick={() => handleToggleActive(code.id, code.activo)}
-                          >
-                            {code.activo ? "Desactivar" : "Activar"}
-                          </Button>
+                        <div className="flex items-center gap-3">
+                          <Switch
+                            checked={code.activo}
+                            onCheckedChange={() => handleToggleActive(code.id, code.activo)}
+                            className="data-[state=checked]:bg-cyan-400"
+                          />
                           <Button
                             variant="ghost"
                             size="sm"
