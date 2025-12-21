@@ -30,8 +30,8 @@ export default function AdminPage() {
   const [filteredOrders, setFilteredOrders] = useState<PedidoCompleto[]>([])
   const [stockStatus, setStockStatus] = useState<StockStatus | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [estadoPagoFilter, setEstadoPagoFilter] = useState<string>("all")
   const [estadoEnvioFilter, setEstadoEnvioFilter] = useState<string>("all")
+  const [zonaFilter, setZonaFilter] = useState<string>("all")
 
   // Estado para tabs
   const [activeTab, setActiveTab] = useState<TabType>("orders")
@@ -54,7 +54,7 @@ export default function AdminPage() {
   useEffect(() => {
     applyFilters()
     setCurrentPage(1) // Reset to first page when filters change
-  }, [orders, estadoPagoFilter, estadoEnvioFilter, searchQuery])
+  }, [orders, estadoEnvioFilter, zonaFilter, searchQuery])
 
   // Bloquear scroll del body cuando el modal de detalles está abierto
   useEffect(() => {
@@ -99,14 +99,14 @@ export default function AdminPage() {
   const applyFilters = () => {
     let filtered = [...orders]
 
-    // Filtro por estado de pago
-    if (estadoPagoFilter !== "all") {
-      filtered = filtered.filter((order) => order.estado_pago === estadoPagoFilter)
-    }
-
     // Filtro por estado de envío
     if (estadoEnvioFilter !== "all") {
       filtered = filtered.filter((order) => order.estado_envio === estadoEnvioFilter)
+    }
+
+    // Filtro por zona
+    if (zonaFilter !== "all") {
+      filtered = filtered.filter((order) => order.zona === zonaFilter)
     }
 
     // Búsqueda por ID de pedido o nombre de cliente
@@ -331,22 +331,6 @@ export default function AdminPage() {
                 <span className="text-sm text-muted-foreground font-medium">Filtrar por:</span>
                 <div className="flex gap-2 flex-wrap">
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs text-muted-foreground pl-1">Estado de Pago</label>
-                    <Select value={estadoPagoFilter} onValueChange={setEstadoPagoFilter}>
-                      <SelectTrigger className="w-[160px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos los pagos</SelectItem>
-                        <SelectItem value="pagado">Pagado</SelectItem>
-                        <SelectItem value="pendiente">Pendiente</SelectItem>
-                        <SelectItem value="fallido">Fallido</SelectItem>
-                        <SelectItem value="reembolsado">Reembolsado</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
                     <label className="text-xs text-muted-foreground pl-1">Estado de Envío</label>
                     <Select value={estadoEnvioFilter} onValueChange={setEstadoEnvioFilter}>
                       <SelectTrigger className="w-[160px]">
@@ -354,9 +338,23 @@ export default function AdminPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">Todos los envíos</SelectItem>
-                        <SelectItem value="pendiente">Por enviar</SelectItem>
-                        <SelectItem value="enviado">En camino</SelectItem>
+                        <SelectItem value="pendiente">Pendiente</SelectItem>
+                        <SelectItem value="enviado">Enviado</SelectItem>
                         <SelectItem value="entregado">Entregado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-muted-foreground pl-1">Zona</label>
+                    <Select value={zonaFilter} onValueChange={setZonaFilter}>
+                      <SelectTrigger className="w-[160px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todas las zonas</SelectItem>
+                        <SelectItem value="cba">Córdoba</SelectItem>
+                        <SelectItem value="interior">Interior</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
