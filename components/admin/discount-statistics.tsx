@@ -151,6 +151,16 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
   }
 
   const handleToggleActive = async (codeId: number, currentStatus: boolean) => {
+    // Actualización optimista: cambiar el estado local inmediatamente
+    if (stats) {
+      setStats({
+        ...stats,
+        codes: stats.codes.map((code) =>
+          code.id === codeId ? { ...code, activo: !currentStatus } : code
+        ),
+      })
+    }
+
     try {
       const response = await fetch(`/api/admin/discount-codes/${codeId}`, {
         method: "PATCH",
@@ -158,13 +168,29 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
         body: JSON.stringify({ activo: !currentStatus }),
       })
 
-      if (response.ok) {
-        fetchStats()
-      } else {
+      if (!response.ok) {
+        // Si falla, revertir el cambio
+        if (stats) {
+          setStats({
+            ...stats,
+            codes: stats.codes.map((code) =>
+              code.id === codeId ? { ...code, activo: currentStatus } : code
+            ),
+          })
+        }
         const error = await response.json()
         alert(error.error || "Error al actualizar código de descuento")
       }
     } catch (error) {
+      // Si hay error, revertir el cambio
+      if (stats) {
+        setStats({
+          ...stats,
+          codes: stats.codes.map((code) =>
+            code.id === codeId ? { ...code, activo: currentStatus } : code
+          ),
+        })
+      }
       console.error("[admin] Error toggling discount code:", error)
       alert("Error al actualizar código de descuento")
     }
