@@ -15,11 +15,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Loader2, TrendingUp, BarChart3, Tag, DollarSign, Plus, Search } from "lucide-react"
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js"
-import { Bar, Pie } from "react-chartjs-2"
+import { Loader2, TrendingUp, BarChart3, Tag, DollarSign, Plus, Search, Trash2 } from "lucide-react"
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js"
+import { Line } from "react-chartjs-2"
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
+ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend)
 
 interface DiscountCodeStats {
   id: number
@@ -163,6 +163,29 @@ export function DiscountStatistics() {
     }
   }
 
+  const handleDeleteCode = async (codeId: number, codigo: string) => {
+    if (!confirm(`¿Estás seguro de eliminar el código "${codigo}"? Esta acción no se puede deshacer.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/discount-codes/${codeId}`, {
+        method: "DELETE",
+      })
+
+      if (response.ok) {
+        alert("Código eliminado exitosamente")
+        fetchStats()
+      } else {
+        const error = await response.json()
+        alert(error.error || "Error al eliminar código de descuento")
+      }
+    } catch (error) {
+      console.error("[admin] Error deleting discount code:", error)
+      alert("Error al eliminar código de descuento")
+    }
+  }
+
   // Filter codes based on search query
   const filteredCodes = stats?.codes.filter((code) => {
     const query = searchQuery.toLowerCase().trim()
@@ -195,61 +218,25 @@ export function DiscountStatistics() {
     return <div className="text-center py-12 text-muted-foreground">Error al cargar estadísticas</div>
   }
 
-  // Chart data
-  const usageChartData = {
+  // Combined chart data (Usage + Revenue)
+  const combinedChartData = {
     labels: stats.codes.map((code) => code.codigo),
     datasets: [
+      {
+        label: "Ingresos ($)",
+        data: stats.codes.map((code) => code.total_revenue),
+        borderColor: "rgba(34, 197, 94, 1)",
+        backgroundColor: "rgba(34, 197, 94, 0.1)",
+        tension: 0.4,
+        yAxisID: "y",
+      },
       {
         label: "Usos Exitosos",
         data: stats.codes.map((code) => code.successful_uses),
-        backgroundColor: "rgba(6, 182, 212, 0.7)",
         borderColor: "rgba(6, 182, 212, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Usos Pendientes",
-        data: stats.codes.map((code) => code.pending_uses),
-        backgroundColor: "rgba(251, 191, 36, 0.7)",
-        borderColor: "rgba(251, 191, 36, 1)",
-        borderWidth: 1,
-      },
-    ],
-  }
-
-  const revenueChartData = {
-    labels: stats.codes.map((code) => code.codigo),
-    datasets: [
-      {
-        label: "Ingresos Generados ($)",
-        data: stats.codes.map((code) => code.total_revenue),
-        backgroundColor: "rgba(34, 197, 94, 0.7)",
-        borderColor: "rgba(34, 197, 94, 1)",
-        borderWidth: 1,
-      },
-    ],
-  }
-
-  const discountGivenChartData = {
-    labels: stats.codes.map((code) => code.codigo),
-    datasets: [
-      {
-        label: "Descuento Total Otorgado ($)",
-        data: stats.codes.map((code) => code.total_discount_given),
-        backgroundColor: "rgba(239, 68, 68, 0.7)",
-        borderColor: "rgba(239, 68, 68, 1)",
-        borderWidth: 1,
-      },
-    ],
-  }
-
-  const activeCodesData = {
-    labels: ["Activos", "Inactivos"],
-    datasets: [
-      {
-        data: [stats.summary.active_codes, stats.summary.total_codes - stats.summary.active_codes],
-        backgroundColor: ["rgba(34, 197, 94, 0.7)", "rgba(156, 163, 175, 0.7)"],
-        borderColor: ["rgba(34, 197, 94, 1)", "rgba(156, 163, 175, 1)"],
-        borderWidth: 1,
+        backgroundColor: "rgba(6, 182, 212, 0.1)",
+        tension: 0.4,
+        yAxisID: "y1",
       },
     ],
   }
@@ -257,19 +244,36 @@ export function DiscountStatistics() {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: "index" as const,
+      intersect: false,
+    },
     plugins: {
       legend: {
         position: "top" as const,
       },
     },
-  }
-
-  const pieChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom" as const,
+    scales: {
+      y: {
+        type: "linear" as const,
+        display: true,
+        position: "left" as const,
+        title: {
+          display: true,
+          text: "Ingresos ($)",
+        },
+      },
+      y1: {
+        type: "linear" as const,
+        display: true,
+        position: "right" as const,
+        title: {
+          display: true,
+          text: "Usos Exitosos",
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
       },
     },
   }
@@ -342,45 +346,17 @@ export function DiscountStatistics() {
       </div>
 
       {/* Charts */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Uso de Códigos de Descuento</CardTitle>
-            <CardDescription>Comparación de usos exitosos vs pendientes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <Bar data={usageChartData} options={chartOptions} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Ingresos por Código</CardTitle>
-            <CardDescription>Total generado con cada código de descuento</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <Bar data={revenueChartData} options={chartOptions} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Estado de Códigos</CardTitle>
-            <CardDescription>Distribución de códigos activos e inactivos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px] flex items-center justify-center">
-              <div className="w-full max-w-[250px]">
-                <Pie data={activeCodesData} options={pieChartOptions} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Rendimiento de Códigos de Descuento</CardTitle>
+          <CardDescription>Ingresos generados y usos exitosos por código</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[400px]">
+            <Line data={combinedChartData} options={chartOptions} />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Detailed Table */}
       <Card>
@@ -472,13 +448,22 @@ export function DiscountStatistics() {
                         ${code.total_discount_given.toLocaleString("es-AR")}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant={code.activo ? "outline" : "default"}
-                          size="sm"
-                          onClick={() => handleToggleActive(code.id, code.activo)}
-                        >
-                          {code.activo ? "Desactivar" : "Activar"}
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            variant={code.activo ? "outline" : "default"}
+                            size="sm"
+                            onClick={() => handleToggleActive(code.id, code.activo)}
+                          >
+                            {code.activo ? "Desactivar" : "Activar"}
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteCode(code.id, code.codigo)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
