@@ -29,12 +29,14 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
   const [appliedDiscount, setAppliedDiscount] = useState<{
     code: string
     percentage: number
+    id_descuento: number
   } | null>(null)
   const [discountError, setDiscountError] = useState<string | null>(null)
   const [isValidatingDiscount, setIsValidatingDiscount] = useState(false)
   const [basePrice, setBasePrice] = useState<number | null>(null)
   const [outsidePrice, setOutsidePrice] = useState<number | null>(null)
   const [pricesLoaded, setPricesLoaded] = useState(false)
+  const [serialLoaded, setSerialLoaded] = useState(false)
 
   // Hook para obtener stock en tiempo real
   const { stockData } = useRealtimeStock()
@@ -76,18 +78,40 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     fetchPrices()
   }, [])
 
+  // Bloquear scroll del body cuando el modal está abierto
   useEffect(() => {
     if (isShippingDialogOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = 'var(--scrollbar-width, 0px)'
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
+    }
+  }, [isShippingDialogOpen])
+
+  useEffect(() => {
+    if (isShippingDialogOpen) {
+      setSerialLoaded(false)
       fetch("/api/get-next-serial")
         .then((res) => res.json())
         .then((data) => {
           if (data.serialNumber) {
             setSerialNumber(data.serialNumber)
+            // Trigger animation after a small delay
+            setTimeout(() => setSerialLoaded(true), 100)
           }
         })
         .catch((err) => {
           console.error("[v0] Error fetching serial number:", err)
+          setSerialLoaded(true)
         })
+    } else {
+      setSerialLoaded(false)
     }
   }, [isShippingDialogOpen])
 
@@ -124,6 +148,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
         setAppliedDiscount({
           code: data.code,
           percentage: data.discount_percentage,
+          id_descuento: data.id_descuento,
         })
         setDiscountError(null)
       }
@@ -158,6 +183,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
           zona,
           discountCode: appliedDiscount?.code || null,
           discountPercentage: appliedDiscount?.percentage || null,
+          idDescuento: appliedDiscount?.id_descuento || null,
         }),
       })
 
@@ -201,7 +227,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
           <div className="relative">
             <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
             <div
-              className="relative bg-card/50 backdrop-blur-sm border border-border rounded-lg p-4 sm:p-8 cursor-pointer"
+              className="relative bg-card/50 backdrop-blur-sm border border-border rounded-lg p-2 sm:p-4 md:p-8 cursor-pointer"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
             >
@@ -209,7 +235,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                 <img
                   src="/images/screenshot001.webp"
                   alt="BUZZY × TEDDYTWIST Limited Edition"
-                  className="w-full h-auto"
+                  className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                 />
               ) : (
                 <video
@@ -218,7 +244,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                   loop
                   muted
                   playsInline
-                  className="w-full h-auto"
+                  className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                 />
               )}
             </div>
@@ -274,14 +300,14 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                     {isProcessing ? "PROCESANDO..." : "ADOPTAR A BUZZY"}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-4xl">
-                  <div className="grid md:grid-cols-2 gap-6 items-center">
-                    <div className="flex flex-col justify-center">
+                <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <div className="grid md:grid-cols-2 gap-4 md:gap-6 items-start">
+                    <div className="flex flex-col justify-center order-2 md:order-1">
                       <DialogHeader>
-                        <DialogTitle className="text-xl sm:text-2xl font-bold text-left">
+                        <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold text-left">
                           Selecciona tu ubicación
                         </DialogTitle>
-                        <DialogDescription className="text-left pt-2">
+                        <DialogDescription className="text-sm sm:text-base text-left pt-2">
                           ¿El envío es dentro de Córdoba capital o fuera de Córdoba?
                         </DialogDescription>
                       </DialogHeader>
@@ -387,8 +413,8 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-center justify-start">
-                      <div className="relative w-full max-w-sm">
+                    <div className="flex flex-col items-center justify-start order-1 md:order-2">
+                      <div className="relative w-full max-w-[280px] sm:max-w-sm mx-auto">
                         <Image
                           src="/images/sin-20numero.webp"
                           alt="Buzzy con tarjeta"
@@ -396,13 +422,17 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                           height={600}
                           className="w-full h-auto object-contain"
                         />
-                        <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 w-[45%]">
-                          <p className="text-black font-black text-lg sm:text-xl text-center leading-none">
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-[20%]">
+                          <p
+                            className={`text-black font-black text-base sm:text-lg md:text-xl text-center leading-none whitespace-nowrap ${
+                              serialLoaded ? 'animate-serial-appear' : 'opacity-0'
+                            }`}
+                          >
                             {mounted ? serialNumber : "001/900"}
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground text-center mt-1">Numero de serie que adquirirás</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground text-center mt-1">Numero de serie que adquirirás</p>
                     </div>
                   </div>
                 </DialogContent>

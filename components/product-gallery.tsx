@@ -31,13 +31,13 @@ export function ProductGallery() {
           <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-start">
             {/* Video Section - Left */}
             <div className="space-y-3 sm:space-y-4">
-              <div className="relative w-full bg-card border border-border rounded-lg overflow-hidden">
-                <video ref={videoRef} className="w-full h-auto" autoPlay loop muted playsInline>
+              <div className="relative w-full bg-card border border-border rounded-lg overflow-hidden max-h-[60vh] sm:max-h-none">
+                <video ref={videoRef} className="w-full h-auto object-contain" autoPlay loop muted playsInline>
                   <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/video_review_buzzy-Hu7QjQNz5Pz4uAq7mwU27MrAURcA05.mp4" type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
               </div>
-              <p className="text-center text-base sm:text-lg text-muted-foreground">Review del producto</p>
+              <p className="text-center text-sm sm:text-base md:text-lg text-muted-foreground">Review del producto</p>
             </div>
 
             {/* Product Information - Right */}
@@ -75,11 +75,11 @@ export function ProductGallery() {
                   TEDDYTWIST.
                 </p>
                 <div className="flex items-center gap-3 sm:gap-4 pt-2">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-primary flex-shrink-0">
-                    <img src="/images/perfil.webp" alt="Gonzalo Quaino" className="w-full h-full object-cover" />
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-primary flex-shrink-0">
+                    <img src="/images/perfil.webp" alt="Gonzalo Quaino" className="w-full h-full object-cover" loading="lazy" />
                   </div>
                   <div>
-                    <p className="font-bold text-base sm:text-lg">TEDDYTWIST</p>
+                    <p className="font-bold text-sm sm:text-base md:text-lg">TEDDYTWIST</p>
                     <p className="text-xs sm:text-sm text-muted-foreground">Gonzalo Quaino</p>
                   </div>
                 </div>

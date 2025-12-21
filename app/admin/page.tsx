@@ -16,9 +16,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut } from "lucide-react"
+import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut, BarChart3 } from "lucide-react"
 import type { PedidoCompleto, StockStatus, Cliente } from "@/lib/types"
 import { formatArgentinaDateTime } from "@/lib/utils/timezone"
+import { DiscountStatistics } from "@/components/admin/discount-statistics"
+import { GeneralStatistics } from "@/components/admin/general-statistics"
+
+type TabType = "orders" | "discount-stats" | "general-stats"
 
 export default function AdminPage() {
   const router = useRouter()
@@ -28,6 +32,9 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [estadoPagoFilter, setEstadoPagoFilter] = useState<string>("all")
   const [estadoEnvioFilter, setEstadoEnvioFilter] = useState<string>("all")
+
+  // Estado para tabs
+  const [activeTab, setActiveTab] = useState<TabType>("orders")
 
   // Estados para modal de detalles del pedido
   const [selectedOrder, setSelectedOrder] = useState<PedidoCompleto | null>(null)
@@ -43,6 +50,22 @@ export default function AdminPage() {
   useEffect(() => {
     applyFilters()
   }, [orders, estadoPagoFilter, estadoEnvioFilter, searchQuery])
+
+  // Bloquear scroll del body cuando el modal de detalles está abierto
+  useEffect(() => {
+    if (isDetailsModalOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = 'var(--scrollbar-width, 0px)'
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
+    }
+  }, [isDetailsModalOpen])
 
   const handleLogout = async () => {
     const supabase = createClient()
@@ -165,9 +188,11 @@ export default function AdminPage() {
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={fetchData} variant="outline">
-              Actualizar
-            </Button>
+            {activeTab === "orders" && (
+              <Button onClick={fetchData} variant="outline">
+                Actualizar
+              </Button>
+            )}
             <Button onClick={handleLogout} variant="outline" className="gap-2">
               <LogOut className="w-4 h-4" />
               Cerrar Sesión
@@ -175,8 +200,39 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Tabs */}
+        <div className="flex gap-2 border-b border-border overflow-x-auto">
+          <Button
+            variant={activeTab === "orders" ? "default" : "ghost"}
+            className="gap-2 whitespace-nowrap"
+            onClick={() => setActiveTab("orders")}
+          >
+            <ShoppingBag className="w-4 h-4" />
+            Pedidos
+          </Button>
+          <Button
+            variant={activeTab === "general-stats" ? "default" : "ghost"}
+            className="gap-2 whitespace-nowrap"
+            onClick={() => setActiveTab("general-stats")}
+          >
+            <TrendingUp className="w-4 h-4" />
+            Estadísticas Generales
+          </Button>
+          <Button
+            variant={activeTab === "discount-stats" ? "default" : "ghost"}
+            className="gap-2 whitespace-nowrap"
+            onClick={() => setActiveTab("discount-stats")}
+          >
+            <BarChart3 className="w-4 h-4" />
+            Códigos de Descuento
+          </Button>
+        </div>
+
+        {/* Orders View */}
+        {activeTab === "orders" && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Stock Disponible</CardTitle>
@@ -372,18 +428,26 @@ export default function AdminPage() {
             </div>
           </CardContent>
         </Card>
+          </>
+        )}
+
+        {/* General Statistics View */}
+        {activeTab === "general-stats" && <GeneralStatistics />}
+
+        {/* Discount Statistics View */}
+        {activeTab === "discount-stats" && <DiscountStatistics />}
       </div>
 
       {/* Modal de Detalles del Pedido */}
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
-          <DialogHeader>
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Detalles del Pedido #{selectedOrder?.id}</DialogTitle>
             <DialogDescription>Información completa del pedido</DialogDescription>
           </DialogHeader>
 
           {selectedOrder && (
-            <div className="space-y-6 overflow-y-auto pr-2 -mr-2" style={{ overscrollBehavior: 'contain' }}>
+            <div className="space-y-6 overflow-y-auto pr-2 -mr-2 flex-1 min-h-0" style={{ overscrollBehavior: 'contain' }}>
               {/* Información del Pedido */}
               <div className="space-y-3">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
@@ -444,6 +508,12 @@ export default function AdminPage() {
                         <p className="text-muted-foreground">Descuento ({selectedOrder.porcentaje_descuento}%)</p>
                         <p className="text-green-600 font-semibold">-${selectedOrder.monto_descuento.toLocaleString("es-AR")}</p>
                       </div>
+                      {selectedOrder.codigo_descuento && (
+                        <div>
+                          <p className="text-muted-foreground">Código Usado</p>
+                          <p className="font-mono font-semibold text-primary">{selectedOrder.codigo_descuento.codigo}</p>
+                        </div>
+                      )}
                     </>
                   )}
                   <div>

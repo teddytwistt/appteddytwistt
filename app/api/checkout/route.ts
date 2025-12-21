@@ -54,63 +54,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Crear preferencia de Mercado Pago con metadata para crear el pedido después del pago
     const preference = await createMercadoPagoPreference(
       zona,
       montoFinal,
       montoOriginal,
       discountCode,
-      discountPercentage
+      discountPercentage,
+      idDescuento
     )
 
     if (!preference.id || !preference.init_point) {
       return NextResponse.json({ error: "Error al crear preferencia de pago" }, { status: 500 })
     }
 
-    // Reservar una unidad disponible
-    const { data: unidadReservada, error: unidadError } = await supabase.rpc("reservar_unidad_disponible", {
-      p_id_producto: PRODUCTO_ID,
-    })
-
-    if (unidadError || !unidadReservada || unidadReservada.length === 0) {
-      console.error("[checkout] Error reserving unit:", unidadError)
-      return NextResponse.json({ error: "No hay stock disponible" }, { status: 400 })
-    }
-
-    const unidad = unidadReservada[0]
-    console.log("[checkout] Unit reserved:", unidad.id_unidad, "Serial:", unidad.numero_serie)
-
-    // Crear el pedido con la unidad reservada
-    const { data: orderData, error: orderError } = await supabase
-      .from("pedidos")
-      .insert({
-        preference_id: preference.id,
-        id_producto: PRODUCTO_ID,
-        id_unidad: unidad.id_unidad,
-        zona,
-        monto_original: montoOriginal,
-        porcentaje_descuento: discountPercentage || 0,
-        monto_descuento: montoDescuento,
-        monto_final: montoFinal,
-        estado_pago: "pendiente",
-        estado_envio: "pendiente",
-        id_codigo_descuento: idDescuento || null,
-      })
-      .select()
-      .single()
-
-    if (orderError) {
-      console.error("[checkout] Error creating order:", orderError)
-      // Liberar la unidad si falla la creación del pedido
-      await supabase.rpc("liberar_unidad", { p_id_unidad: unidad.id_unidad })
-      return NextResponse.json({ error: "Error al crear pedido" }, { status: 500 })
-    }
-
-    console.log("[checkout] Order created successfully:", orderData.id, "Unit:", unidad.id_unidad)
+    console.log("[checkout] Preference created. No unit reserved, no order created. Waiting for payment confirmation.")
 
     return NextResponse.json({
       init_point: preference.init_point,
       preference_id: preference.id,
-      pedido_id: orderData.id,
     })
   } catch (error) {
     console.error("[checkout] Checkout error:", error)
@@ -124,6 +86,7 @@ async function createMercadoPagoPreference(
   montoOriginal: number,
   discountCode: string | null,
   discountPercentage: number | null,
+  idDescuento: number | null,
 ) {
   const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN
 
@@ -143,6 +106,18 @@ async function createMercadoPagoPreference(
   let description = zona === "cba" ? "Envío gratis - Córdoba Capital" : "Incluye envío - Resto del país"
   if (discountCode && discountPercentage) {
     description += ` | Descuento ${discountPercentage}% aplicado (${discountCode})`
+  }
+
+  // Guardar información en metadata para crear el pedido después del pago
+  const metadata = {
+    id_producto: PRODUCTO_ID,
+    zona,
+    monto_original: montoOriginal,
+    porcentaje_descuento: discountPercentage || 0,
+    monto_descuento: montoOriginal - monto,
+    monto_final: monto,
+    discount_code: discountCode || null,
+    id_codigo_descuento: idDescuento || null,
   }
 
   const preferenceData = {
@@ -169,6 +144,7 @@ async function createMercadoPagoPreference(
       installments: 1,
     },
     additional_info: `Completá tus datos de envío en: ${formUrl}`,
+    metadata,
   }
 
   console.log("[v0] Preference data:", JSON.stringify(preferenceData, null, 2))

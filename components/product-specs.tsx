@@ -102,8 +102,9 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
                 <img
                   src="/images/recurso-207depiece.webp"
                   alt="Despiece del producto TeddyTwist mostrando componentes"
-                  className="w-full max-w-md h-auto object-contain select-none"
+                  className="w-full max-w-[280px] sm:max-w-sm md:max-w-md h-auto object-contain select-none"
                   draggable="false"
+                  loading="lazy"
                   style={{
                     filter: `drop-shadow(0 ${isMobile || transform.scale === 1.05 ? "30px" : "20px"} ${isMobile || transform.scale === 1.05 ? "40px" : "30px"} rgba(6, 182, 212, ${isMobile || transform.scale === 1.05 ? "0.4" : "0.2"}))`,
                     transition: "filter 0.2s ease-out",
@@ -122,28 +123,28 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
               </p>
             </div>
 
-            <div className="flex flex-col items-center gap-6 pt-4">
+            <div className="flex flex-col items-center gap-4 sm:gap-6 pt-4">
               <Button
                 size="lg"
-                className="text-lg font-bold h-14 bg-cyan-400 hover:bg-cyan-500 text-black min-w-72 rounded-md"
+                className="text-base sm:text-lg font-bold h-12 sm:h-14 bg-cyan-400 hover:bg-cyan-500 text-black w-full sm:w-auto sm:min-w-72 rounded-md"
                 onClick={onAdoptClick}
               >
                 ADOPTAR A BUZZY
               </Button>
 
-              <p className="text-sm sm:text-base text-gray-300">
+              <p className="text-xs sm:text-sm md:text-base text-gray-300 text-center px-4">
                 Envío gratuito dentro de Córdoba capital • Garantía de un mes
               </p>
 
-              <div className="flex items-center justify-center gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
-                  className="gap-2 bg-transparent border-none hover:bg-white/10"
+                  className="gap-2 bg-transparent border-none hover:bg-white/10 w-full sm:w-auto text-sm sm:text-base"
                   asChild
                 >
                   <a href="https://www.instagram.com/teddytwist_/" target="_blank" rel="noopener noreferrer">
-                    <Instagram className="w-5 h-5" />
+                    <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
                     Síguenos en Instagram
                   </a>
                 </Button>
@@ -151,7 +152,7 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="gap-2 bg-transparent border-none hover:bg-white/10"
+                  className="gap-2 bg-transparent border-none hover:bg-white/10 w-full sm:w-auto text-sm sm:text-base"
                   asChild
                 >
                   <a
@@ -159,7 +160,7 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     Consultas
                   </a>
                 </Button>
@@ -170,14 +171,14 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
       </div>
 
       {/* YouTube Video Section */}
-      <div className="mt-24 w-full max-w-7xl mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-cyan-500/30 rounded-2xl p-8 sm:p-12 space-y-6">
-            <div className="text-center space-y-3">
-              <h3 className="text-3xl sm:text-4xl font-black text-white">Ve a BUZZY en Acción</h3>
-              <p className="text-base sm:text-lg text-gray-300">Descubre cómo funciona este increíble picador</p>
+      <div className="mt-12 sm:mt-24 w-full max-w-7xl mx-auto px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-cyan-500/30 rounded-2xl p-4 sm:p-8 md:p-12 space-y-4 sm:space-y-6">
+            <div className="text-center space-y-2 sm:space-y-3">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">Ve a BUZZY en Acción</h3>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300">Descubre cómo funciona este increíble picador</p>
             </div>
-            <div className="relative w-full" style={{ paddingBottom: "177.78%" }}>
+            <div className="relative w-full max-w-sm mx-auto" style={{ paddingBottom: "177.78%", maxHeight: "70vh" }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full rounded-lg"
                 src="https://www.youtube.com/embed/cYwepEKb2pE"
@@ -185,20 +186,21 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                loading="lazy"
               />
             </div>
           </div>
         </div>
       </div>
 
-      <footer className="mt-24 border-t border-zinc-800 py-12">
+      <footer className="mt-12 sm:mt-24 border-t border-zinc-800 py-8 sm:py-12">
         <div className="w-full max-w-7xl mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <div className="flex items-center justify-center gap-3">
-              <img src="/images/logo-alpha.webp" alt="TeddyTwist Logo" className="w-12 h-12 object-contain" />
-              <span className="text-2xl font-black text-white">TEDDYTWIST</span>
+          <div className="max-w-4xl mx-auto text-center space-y-3 sm:space-y-4">
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              <img src="/images/logo-alpha.webp" alt="TeddyTwist Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" loading="lazy" />
+              <span className="text-xl sm:text-2xl font-black text-white">TEDDYTWIST</span>
             </div>
-            <p className="text-sm text-gray-400">© 2025 TeddyTwist. Todos los derechos reservados.</p>
+            <p className="text-xs sm:text-sm text-gray-400">© 2025 TeddyTwist. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

@@ -1,0 +1,593 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Loader2, TrendingUp, BarChart3, Tag, DollarSign, Plus, Search } from "lucide-react"
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js"
+import { Bar, Pie } from "react-chartjs-2"
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
+
+interface DiscountCodeStats {
+  id: number
+  codigo: string
+  porcentaje_descuento: number
+  activo: boolean
+  usos_maximos?: number
+  veces_usado: number
+  valido_desde: string
+  valido_hasta?: string
+  descripcion?: string
+  created_at: string
+  total_uses: number
+  successful_uses: number
+  pending_uses: number
+  total_revenue: number
+  total_discount_given: number
+  average_order_value: number
+}
+
+interface DiscountStatsSummary {
+  total_codes: number
+  active_codes: number
+  total_discount_given: number
+  total_revenue_with_discounts: number
+  total_successful_uses: number
+}
+
+interface StatsResponse {
+  codes: DiscountCodeStats[]
+  summary: DiscountStatsSummary
+}
+
+export function DiscountStatistics() {
+  const [stats, setStats] = useState<StatsResponse | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
+
+  // Form state for new discount code
+  const [newCode, setNewCode] = useState({
+    codigo: "",
+    porcentaje_descuento: "",
+    usos_maximos: "",
+    valido_desde: "",
+    valido_hasta: "",
+    descripcion: "",
+    activo: true,
+  })
+
+  useEffect(() => {
+    fetchStats()
+  }, [])
+
+  const fetchStats = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch("/api/admin/discount-stats")
+      const data = await response.json()
+      setStats(data)
+    } catch (error) {
+      console.error("[admin] Error fetching discount stats:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleCreateCode = async () => {
+    if (!newCode.codigo || !newCode.porcentaje_descuento) {
+      alert("El código y el porcentaje de descuento son obligatorios")
+      return
+    }
+
+    setIsCreating(true)
+    try {
+      const response = await fetch("/api/admin/discount-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          codigo: newCode.codigo.toUpperCase(),
+          porcentaje_descuento: parseInt(newCode.porcentaje_descuento),
+          usos_maximos: newCode.usos_maximos ? parseInt(newCode.usos_maximos) : null,
+          valido_desde: newCode.valido_desde || new Date().toISOString(),
+          valido_hasta: newCode.valido_hasta || null,
+          descripcion: newCode.descripcion || null,
+          activo: newCode.activo,
+        }),
+      })
+
+      if (response.ok) {
+        alert("Código de descuento creado exitosamente")
+        setIsCreateModalOpen(false)
+        resetForm()
+        fetchStats()
+      } else {
+        const error = await response.json()
+        alert(error.error || "Error al crear código de descuento")
+      }
+    } catch (error) {
+      console.error("[admin] Error creating discount code:", error)
+      alert("Error al crear código de descuento")
+    } finally {
+      setIsCreating(false)
+    }
+  }
+
+  const resetForm = () => {
+    setNewCode({
+      codigo: "",
+      porcentaje_descuento: "",
+      usos_maximos: "",
+      valido_desde: "",
+      valido_hasta: "",
+      descripcion: "",
+      activo: true,
+    })
+  }
+
+  const handleToggleActive = async (codeId: number, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/admin/discount-codes/${codeId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: !currentStatus }),
+      })
+
+      if (response.ok) {
+        fetchStats()
+      } else {
+        const error = await response.json()
+        alert(error.error || "Error al actualizar código de descuento")
+      }
+    } catch (error) {
+      console.error("[admin] Error toggling discount code:", error)
+      alert("Error al actualizar código de descuento")
+    }
+  }
+
+  // Filter codes based on search query
+  const filteredCodes = stats?.codes.filter((code) => {
+    const query = searchQuery.toLowerCase().trim()
+    return (
+      code.codigo.toLowerCase().includes(query) ||
+      code.descripcion?.toLowerCase().includes(query)
+    )
+  }) || []
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (!stats) {
+    return <div className="text-center py-12 text-muted-foreground">Error al cargar estadísticas</div>
+  }
+
+  // Chart data
+  const usageChartData = {
+    labels: stats.codes.map((code) => code.codigo),
+    datasets: [
+      {
+        label: "Usos Exitosos",
+        data: stats.codes.map((code) => code.successful_uses),
+        backgroundColor: "rgba(6, 182, 212, 0.7)",
+        borderColor: "rgba(6, 182, 212, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Usos Pendientes",
+        data: stats.codes.map((code) => code.pending_uses),
+        backgroundColor: "rgba(251, 191, 36, 0.7)",
+        borderColor: "rgba(251, 191, 36, 1)",
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  const revenueChartData = {
+    labels: stats.codes.map((code) => code.codigo),
+    datasets: [
+      {
+        label: "Ingresos Generados ($)",
+        data: stats.codes.map((code) => code.total_revenue),
+        backgroundColor: "rgba(34, 197, 94, 0.7)",
+        borderColor: "rgba(34, 197, 94, 1)",
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  const discountGivenChartData = {
+    labels: stats.codes.map((code) => code.codigo),
+    datasets: [
+      {
+        label: "Descuento Total Otorgado ($)",
+        data: stats.codes.map((code) => code.total_discount_given),
+        backgroundColor: "rgba(239, 68, 68, 0.7)",
+        borderColor: "rgba(239, 68, 68, 1)",
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  const activeCodesData = {
+    labels: ["Activos", "Inactivos"],
+    datasets: [
+      {
+        data: [stats.summary.active_codes, stats.summary.total_codes - stats.summary.active_codes],
+        backgroundColor: ["rgba(34, 197, 94, 0.7)", "rgba(156, 163, 175, 0.7)"],
+        borderColor: ["rgba(34, 197, 94, 1)", "rgba(156, 163, 175, 1)"],
+        borderWidth: 1,
+      },
+    ],
+  }
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+    },
+  }
+
+  const pieChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+      },
+    },
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Códigos</CardTitle>
+            <Tag className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.summary.total_codes}</div>
+            <p className="text-xs text-muted-foreground">{stats.summary.active_codes} activos</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Usos Exitosos</CardTitle>
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.summary.total_successful_uses}</div>
+            <p className="text-xs text-muted-foreground">Pedidos pagados</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Ingresos con Descuento</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.summary.total_revenue_with_discounts.toLocaleString("es-AR")}</div>
+            <p className="text-xs text-muted-foreground">Total generado</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Descuento Otorgado</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.summary.total_discount_given.toLocaleString("es-AR")}</div>
+            <p className="text-xs text-muted-foreground">Total descontado</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Promedio por Pedido</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              $
+              {stats.summary.total_successful_uses > 0
+                ? Math.round(stats.summary.total_revenue_with_discounts / stats.summary.total_successful_uses).toLocaleString(
+                    "es-AR",
+                  )
+                : 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Valor promedio</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Uso de Códigos de Descuento</CardTitle>
+            <CardDescription>Comparación de usos exitosos vs pendientes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <Bar data={usageChartData} options={chartOptions} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Ingresos por Código</CardTitle>
+            <CardDescription>Total generado con cada código de descuento</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <Bar data={revenueChartData} options={chartOptions} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Descuento Total Otorgado</CardTitle>
+            <CardDescription>Monto total descontado por código</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <Bar data={discountGivenChartData} options={chartOptions} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Estado de Códigos</CardTitle>
+            <CardDescription>Distribución de códigos activos e inactivos</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px] flex items-center justify-center">
+              <div className="w-full max-w-[250px]">
+                <Pie data={activeCodesData} options={pieChartOptions} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Detailed Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <CardTitle>Detalle de Códigos de Descuento</CardTitle>
+              <CardDescription>Información detallada de cada código</CardDescription>
+            </div>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:flex-initial">
+                <Input
+                  type="text"
+                  placeholder="Buscar código..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full sm:w-64 pr-8"
+                />
+                <Search className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              </div>
+              <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2 whitespace-nowrap">
+                <Plus className="w-4 h-4" />
+                Crear Código
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Código</TableHead>
+                  <TableHead>Descuento</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Usos</TableHead>
+                  <TableHead>Usos Exitosos</TableHead>
+                  <TableHead>Ingresos</TableHead>
+                  <TableHead>Descuento Otorgado</TableHead>
+                  <TableHead>Promedio/Pedido</TableHead>
+                  <TableHead>Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredCodes.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="text-center text-muted-foreground">
+                      {searchQuery ? "No se encontraron códigos con esa búsqueda" : "No hay códigos de descuento"}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredCodes.map((code) => (
+                    <TableRow key={code.id}>
+                      <TableCell className="font-mono font-semibold">{code.codigo}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{code.porcentaje_descuento}%</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={code.activo ? "default" : "secondary"}>{code.activo ? "Activo" : "Inactivo"}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div className="font-medium">{code.total_uses}</div>
+                          {code.usos_maximos && (
+                            <div className="text-muted-foreground text-xs">de {code.usos_maximos} máx.</div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-semibold">{code.successful_uses}</TableCell>
+                      <TableCell className="font-semibold text-green-600">${code.total_revenue.toLocaleString("es-AR")}</TableCell>
+                      <TableCell className="font-semibold text-red-600">
+                        ${code.total_discount_given.toLocaleString("es-AR")}
+                      </TableCell>
+                      <TableCell>${Math.round(code.average_order_value).toLocaleString("es-AR")}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant={code.activo ? "outline" : "default"}
+                          size="sm"
+                          onClick={() => handleToggleActive(code.id, code.activo)}
+                        >
+                          {code.activo ? "Desactivar" : "Activar"}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Create Discount Code Modal */}
+      <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Crear Nuevo Código de Descuento</DialogTitle>
+            <DialogDescription>Complete los datos para crear un nuevo código de descuento</DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="codigo">
+                Código <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="codigo"
+                type="text"
+                placeholder="Ej: VERANO2024"
+                value={newCode.codigo}
+                onChange={(e) => setNewCode({ ...newCode, codigo: e.target.value.toUpperCase() })}
+                disabled={isCreating}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="porcentaje">
+                Porcentaje de Descuento (%) <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="porcentaje"
+                type="number"
+                min="1"
+                max="100"
+                placeholder="Ej: 10"
+                value={newCode.porcentaje_descuento}
+                onChange={(e) => setNewCode({ ...newCode, porcentaje_descuento: e.target.value })}
+                disabled={isCreating}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="usos_maximos">Usos Máximos (opcional)</Label>
+              <Input
+                id="usos_maximos"
+                type="number"
+                min="1"
+                placeholder="Ej: 100"
+                value={newCode.usos_maximos}
+                onChange={(e) => setNewCode({ ...newCode, usos_maximos: e.target.value })}
+                disabled={isCreating}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="valido_desde">Válido Desde (opcional)</Label>
+              <Input
+                id="valido_desde"
+                type="datetime-local"
+                value={newCode.valido_desde}
+                onChange={(e) => setNewCode({ ...newCode, valido_desde: e.target.value })}
+                disabled={isCreating}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="valido_hasta">Válido Hasta (opcional)</Label>
+              <Input
+                id="valido_hasta"
+                type="datetime-local"
+                value={newCode.valido_hasta}
+                onChange={(e) => setNewCode({ ...newCode, valido_hasta: e.target.value })}
+                disabled={isCreating}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="descripcion">Descripción (opcional)</Label>
+              <Input
+                id="descripcion"
+                type="text"
+                placeholder="Ej: Descuento para campaña de verano"
+                value={newCode.descripcion}
+                onChange={(e) => setNewCode({ ...newCode, descripcion: e.target.value })}
+                disabled={isCreating}
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="activo"
+                checked={newCode.activo}
+                onChange={(e) => setNewCode({ ...newCode, activo: e.target.checked })}
+                disabled={isCreating}
+                className="w-4 h-4"
+              />
+              <Label htmlFor="activo" className="cursor-pointer">
+                Código activo
+              </Label>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateModalOpen(false)} disabled={isCreating}>
+              Cancelar
+            </Button>
+            <Button onClick={handleCreateCode} disabled={isCreating}>
+              {isCreating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creando...
+                </>
+              ) : (
+                "Crear Código"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
