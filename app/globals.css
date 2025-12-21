@@ -154,6 +154,83 @@
   transform-style: preserve-3d;
 }
 
+/* Multi-layer floating animations for parallax */
+@keyframes float-layer-1 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) translateX(3px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-12px) translateX(-2px) rotate(-0.5deg);
+  }
+  75% {
+    transform: translateY(-6px) translateX(2px) rotate(0.5deg);
+  }
+}
+
+@keyframes float-layer-2 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-12px) translateX(-4px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-18px) translateX(3px) rotate(0.8deg);
+  }
+  75% {
+    transform: translateY(-10px) translateX(-2px) rotate(-0.5deg);
+  }
+}
+
+@keyframes float-layer-3 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) translateX(5px) rotate(1.2deg);
+  }
+  50% {
+    transform: translateY(-22px) translateX(-4px) rotate(-1deg);
+  }
+  75% {
+    transform: translateY(-14px) translateX(3px) rotate(0.7deg);
+  }
+}
+
+@keyframes float-layer-4 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-18px) translateX(-6px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-25px) translateX(5px) rotate(1.2deg);
+  }
+  75% {
+    transform: translateY(-16px) translateX(-4px) rotate(-0.8deg);
+  }
+}
+
+.float-layer-1 {
+  animation: float-layer-1 6s ease-in-out infinite;
+}
+
+.float-layer-2 {
+  animation: float-layer-2 7s ease-in-out infinite 0.5s;
+}
+
+.float-layer-3 {
+  animation: float-layer-3 8s ease-in-out infinite 1s;
+}
+
+.float-layer-4 {
+  animation: float-layer-4 9s ease-in-out infinite 1.5s;
+}
+
 /* Animación para el número de serie */
 @keyframes serial-appear {
   0% {

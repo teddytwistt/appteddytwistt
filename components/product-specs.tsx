@@ -24,7 +24,7 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  // Mouse effect for desktop
+  // Mouse effect for desktop - multi-layer parallax
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isMobile) return // Don't use mouse effect on mobile
 
@@ -47,6 +47,14 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
     if (isMobile) return // Don't reset on mobile
     setTransform({ rotateX: 0, rotateY: 0, scale: 1 })
   }
+
+  // Layer configurations for parallax effect
+  const layers = [
+    { src: "/images/01.png", depth: 0.3, animation: "float-layer-1" },
+    { src: "/images/02.png", depth: 0.5, animation: "float-layer-2" },
+    { src: "/images/03.png", depth: 0.7, animation: "float-layer-3" },
+    { src: "/images/04.png", depth: 0.9, animation: "float-layer-4" },
+  ]
 
   const specs = [
     { label: "Material", value: "Plástico" },
@@ -86,30 +94,33 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
                 ref={imageRef}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                className={isMobile ? "animate-float-gentle" : "cursor-pointer"}
-                style={
-                  isMobile
-                    ? {
-                        transformStyle: "preserve-3d",
-                      }
-                    : {
-                        transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${transform.scale})`,
-                        transition: "transform 0.2s ease-out",
-                        transformStyle: "preserve-3d",
-                      }
-                }
+                className="cursor-pointer relative w-full max-w-[280px] sm:max-w-sm md:max-w-md"
+                style={{
+                  height: "500px",
+                  transformStyle: "preserve-3d",
+                }}
               >
-                <img
-                  src="/images/recurso-207depiece.webp"
-                  alt="Despiece del producto TeddyTwist mostrando componentes"
-                  className="w-full max-w-[280px] sm:max-w-sm md:max-w-md h-auto object-contain select-none"
-                  draggable="false"
-                  loading="lazy"
-                  style={{
-                    filter: `drop-shadow(0 ${isMobile || transform.scale === 1.05 ? "30px" : "20px"} ${isMobile || transform.scale === 1.05 ? "40px" : "30px"} rgba(6, 182, 212, ${isMobile || transform.scale === 1.05 ? "0.4" : "0.2"}))`,
-                    transition: "filter 0.2s ease-out",
-                  }}
-                />
+                {layers.map((layer, index) => (
+                  <img
+                    key={index}
+                    src={layer.src}
+                    alt={`Pieza ${index + 1} del despiece TeddyTwist`}
+                    className={`absolute inset-0 w-full h-full object-contain select-none ${isMobile ? layer.animation : ""}`}
+                    draggable="false"
+                    loading="lazy"
+                    style={
+                      isMobile
+                        ? {
+                            filter: `drop-shadow(0 20px 30px rgba(6, 182, 212, ${0.3 - index * 0.05}))`,
+                          }
+                        : {
+                            transform: `perspective(1000px) rotateX(${transform.rotateX * layer.depth}deg) rotateY(${transform.rotateY * layer.depth}deg) scale(${1 + (transform.scale - 1) * layer.depth}) translateZ(${index * 20}px)`,
+                            transition: "transform 0.2s ease-out",
+                            filter: `drop-shadow(0 ${transform.scale === 1.05 ? 30 + index * 5 : 20 + index * 3}px ${transform.scale === 1.05 ? 40 + index * 5 : 30 + index * 3}px rgba(6, 182, 212, ${transform.scale === 1.05 ? 0.4 - index * 0.05 : 0.2 - index * 0.03}))`,
+                          }
+                    }
+                  />
+                ))}
               </div>
             </div>
           </div>
