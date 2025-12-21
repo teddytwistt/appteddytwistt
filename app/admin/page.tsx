@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,8 +19,8 @@ import {
 import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut, BarChart3 } from "lucide-react"
 import type { PedidoCompleto, StockStatus, Cliente } from "@/lib/types"
 import { formatArgentinaDateTime } from "@/lib/utils/timezone"
-import { DiscountStatistics } from "@/components/admin/discount-statistics"
-import { GeneralStatistics } from "@/components/admin/general-statistics"
+import { DiscountStatistics, type DiscountStatisticsRef } from "@/components/admin/discount-statistics"
+import { GeneralStatistics, type GeneralStatisticsRef } from "@/components/admin/general-statistics"
 
 type TabType = "orders" | "discount-stats" | "general-stats"
 
@@ -35,6 +35,10 @@ export default function AdminPage() {
 
   // Estado para tabs
   const [activeTab, setActiveTab] = useState<TabType>("orders")
+
+  // Refs para los componentes de estadísticas
+  const generalStatsRef = useRef<GeneralStatisticsRef>(null)
+  const discountStatsRef = useRef<DiscountStatisticsRef>(null)
 
   // Estados para modal de detalles del pedido
   const [selectedOrder, setSelectedOrder] = useState<PedidoCompleto | null>(null)
@@ -77,6 +81,16 @@ export default function AdminPage() {
     await supabase.auth.signOut()
     router.push("/login")
     router.refresh()
+  }
+
+  const handleRefresh = () => {
+    if (activeTab === "orders") {
+      fetchData()
+    } else if (activeTab === "general-stats") {
+      generalStatsRef.current?.refresh()
+    } else if (activeTab === "discount-stats") {
+      discountStatsRef.current?.refresh()
+    }
   }
 
   const fetchData = async () => {
@@ -199,11 +213,9 @@ export default function AdminPage() {
           </div>
 
           <div className="flex gap-2">
-            {activeTab === "orders" && (
-              <Button onClick={fetchData} variant="outline">
-                Actualizar
-              </Button>
-            )}
+            <Button onClick={handleRefresh} variant="outline">
+              Actualizar
+            </Button>
             <Button onClick={handleLogout} variant="outline" className="gap-2">
               <LogOut className="w-4 h-4" />
               Cerrar Sesión
@@ -471,10 +483,10 @@ export default function AdminPage() {
         )}
 
         {/* General Statistics View */}
-        {activeTab === "general-stats" && <GeneralStatistics />}
+        {activeTab === "general-stats" && <GeneralStatistics ref={generalStatsRef} />}
 
         {/* Discount Statistics View */}
-        {activeTab === "discount-stats" && <DiscountStatistics />}
+        {activeTab === "discount-stats" && <DiscountStatistics ref={discountStatsRef} />}
       </div>
 
       {/* Modal de Detalles del Pedido */}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -58,7 +58,11 @@ interface GeneralStats {
   }
 }
 
-export function GeneralStatistics() {
+export interface GeneralStatisticsRef {
+  refresh: () => void
+}
+
+export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) => {
   const [stats, setStats] = useState<GeneralStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [days, setDays] = useState<string>("30")
@@ -79,6 +83,11 @@ export function GeneralStatistics() {
       setIsLoading(false)
     }
   }
+
+  // Expose refresh function via ref
+  useImperativeHandle(ref, () => ({
+    refresh: fetchStats
+  }))
 
   if (isLoading) {
     return (
@@ -443,4 +452,6 @@ export function GeneralStatistics() {
       </div>
     </div>
   )
-}
+})
+
+GeneralStatistics.displayName = "GeneralStatistics"

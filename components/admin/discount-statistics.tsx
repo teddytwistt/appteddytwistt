@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -53,7 +53,11 @@ interface StatsResponse {
   summary: DiscountStatsSummary
 }
 
-export function DiscountStatistics() {
+export interface DiscountStatisticsRef {
+  refresh: () => void
+}
+
+export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref) => {
   const [stats, setStats] = useState<StatsResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -96,6 +100,11 @@ export function DiscountStatistics() {
       setIsLoading(false)
     }
   }
+
+  // Expose refresh function via ref
+  useImperativeHandle(ref, () => ({
+    refresh: fetchStats
+  }))
 
   const handleCreateCode = async () => {
     if (!newCode.codigo || !newCode.porcentaje_descuento) {
@@ -685,4 +694,6 @@ export function DiscountStatistics() {
       </Dialog>
     </div>
   )
-}
+})
+
+DiscountStatistics.displayName = "DiscountStatistics"
