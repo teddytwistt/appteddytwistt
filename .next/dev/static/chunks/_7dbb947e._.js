@@ -28,7 +28,7 @@ function ProductGallery() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: "py-12 sm:py-24 border-t border-border",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "container px-4",
+            className: "w-full max-w-7xl mx-auto px-4",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "max-w-6xl mx-auto space-y-8 sm:space-y-12",
                 children: [
@@ -64,10 +64,10 @@ function ProductGallery() {
                                 className: "space-y-3 sm:space-y-4",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "relative w-full bg-card border border-border rounded-lg overflow-hidden",
+                                        className: "relative w-full bg-card border border-border rounded-lg overflow-hidden max-h-[60vh] sm:max-h-none",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("video", {
                                             ref: videoRef,
-                                            className: "w-full h-auto",
+                                            className: "w-full h-auto object-contain",
                                             autoPlay: true,
                                             loop: true,
                                             muted: true,
@@ -94,7 +94,7 @@ function ProductGallery() {
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-center text-base sm:text-lg text-muted-foreground",
+                                        className: "text-center text-sm sm:text-base md:text-lg text-muted-foreground",
                                         children: "Review del producto"
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-gallery.tsx",
@@ -215,11 +215,12 @@ function ProductGallery() {
                                                 className: "flex items-center gap-3 sm:gap-4 pt-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-primary flex-shrink-0",
+                                                        className: "w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-primary flex-shrink-0",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                                             src: "/images/perfil.webp",
                                                             alt: "Gonzalo Quaino",
-                                                            className: "w-full h-full object-cover"
+                                                            className: "w-full h-full object-cover",
+                                                            loading: "lazy"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/product-gallery.tsx",
                                                             lineNumber: 79,
@@ -233,7 +234,7 @@ function ProductGallery() {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                className: "font-bold text-base sm:text-lg",
+                                                                className: "font-bold text-sm sm:text-base md:text-lg",
                                                                 children: "TEDDYTWIST"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/product-gallery.tsx",
@@ -405,16 +406,16 @@ __turbopack_context__.n(__turbopack_context__.i("[project]/components/product-ga
 "[project]/node_modules/lucide-react/dist/esm/icons/check.js [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
+__turbopack_context__.s([
+    "default",
+    ()=>Check
+]);
 /**
  * @license lucide-react v0.454.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */ __turbopack_context__.s([
-    "default",
-    ()=>Check
-]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$createLucideIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/createLucideIcon.js [app-client] (ecmascript)");
+ */ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$createLucideIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/createLucideIcon.js [app-client] (ecmascript)");
 ;
 const Check = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$createLucideIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])("Check", [
     [

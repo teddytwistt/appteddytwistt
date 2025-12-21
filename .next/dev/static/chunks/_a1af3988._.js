@@ -538,6 +538,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
     const [basePrice, setBasePrice] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [outsidePrice, setOutsidePrice] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [pricesLoaded, setPricesLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [serialLoaded, setSerialLoaded] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     // Hook para obtener stock en tiempo real
     const { stockData } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useRealtimeStock$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRealtimeStock"])();
     const discountMultiplier = appliedDiscount ? (100 - appliedDiscount.percentage) / 100 : 1;
@@ -577,22 +578,50 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
             fetchPrices();
         }
     }["ProductHero.ProductHero.useEffect"], []);
+    // Bloquear scroll del body cuando el modal está abierto
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ProductHero.ProductHero.useEffect": ()=>{
             if (isShippingDialogOpen) {
+                document.body.style.overflow = 'hidden';
+                document.body.style.paddingRight = 'var(--scrollbar-width, 0px)';
+            } else {
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }
+            return ({
+                "ProductHero.ProductHero.useEffect": ()=>{
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                }
+            })["ProductHero.ProductHero.useEffect"];
+        }
+    }["ProductHero.ProductHero.useEffect"], [
+        isShippingDialogOpen
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ProductHero.ProductHero.useEffect": ()=>{
+            if (isShippingDialogOpen) {
+                setSerialLoaded(false);
                 fetch("/api/get-next-serial").then({
                     "ProductHero.ProductHero.useEffect": (res)=>res.json()
                 }["ProductHero.ProductHero.useEffect"]).then({
                     "ProductHero.ProductHero.useEffect": (data)=>{
                         if (data.serialNumber) {
                             setSerialNumber(data.serialNumber);
+                            // Trigger animation after a small delay
+                            setTimeout({
+                                "ProductHero.ProductHero.useEffect": ()=>setSerialLoaded(true)
+                            }["ProductHero.ProductHero.useEffect"], 100);
                         }
                     }
                 }["ProductHero.ProductHero.useEffect"]).catch({
                     "ProductHero.ProductHero.useEffect": (err)=>{
                         console.error("[v0] Error fetching serial number:", err);
+                        setSerialLoaded(true);
                     }
                 }["ProductHero.ProductHero.useEffect"]);
+            } else {
+                setSerialLoaded(false);
             }
         }
     }["ProductHero.ProductHero.useEffect"], [
@@ -628,7 +657,8 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                 console.log("[v0] Discount applied successfully:", data);
                 setAppliedDiscount({
                     code: data.code,
-                    percentage: data.discount_percentage
+                    percentage: data.discount_percentage,
+                    id_descuento: data.id_descuento
                 });
                 setDiscountError(null);
             }
@@ -658,7 +688,8 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                 body: JSON.stringify({
                     zona,
                     discountCode: appliedDiscount?.code || null,
-                    discountPercentage: appliedDiscount?.percentage || null
+                    discountPercentage: appliedDiscount?.percentage || null,
+                    idDescuento: appliedDiscount?.id_descuento || null
                 })
             });
             const data = await response.json();
@@ -697,16 +728,16 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                     }
                 }, void 0, false, {
                     fileName: "[project]/components/product-hero.tsx",
-                    lineNumber: 185,
+                    lineNumber: 211,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/product-hero.tsx",
-                lineNumber: 184,
+                lineNumber: 210,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "container relative z-10 px-4 py-12 md:py-24",
+                className: "w-full max-w-7xl mx-auto relative z-10 px-4 py-12 md:py-24",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid gap-6 grid-cols-1 lg:grid-cols-2 items-center",
                     children: [
@@ -717,20 +748,20 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                     className: "absolute -inset-4 bg-primary/20 blur-3xl rounded-full"
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 228,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "relative bg-card/50 backdrop-blur-sm border border-border rounded-lg p-4 sm:p-8 cursor-pointer",
+                                    className: "relative bg-card/50 backdrop-blur-sm border border-border rounded-lg p-2 sm:p-4 md:p-8 cursor-pointer",
                                     onMouseEnter: ()=>setIsHovering(true),
                                     onMouseLeave: ()=>setIsHovering(false),
                                     children: !isHovering ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                         src: "/images/screenshot001.webp",
                                         alt: "BUZZY × TEDDYTWIST Limited Edition",
-                                        className: "w-full h-auto"
+                                        className: "w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-hero.tsx",
-                                        lineNumber: 209,
+                                        lineNumber: 235,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("video", {
                                         src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EDICION_LIMITADA_01_comprimido-hOkKkPg8zTsPZEFndyLe0cTiLDRg4Z.mp4",
@@ -738,21 +769,21 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                         loop: true,
                                         muted: true,
                                         playsInline: true,
-                                        className: "w-full h-auto"
+                                        className: "w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-hero.tsx",
-                                        lineNumber: 215,
+                                        lineNumber: 241,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 203,
+                                    lineNumber: 229,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/product-hero.tsx",
-                            lineNumber: 201,
+                            lineNumber: 227,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -766,7 +797,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                             children: "EDICIÓN LIMITADA"
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 229,
+                                            lineNumber: 255,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -777,7 +808,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                     children: mounted ? stockDisplay : "900/900"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 233,
+                                                    lineNumber: 259,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -785,19 +816,19 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                     children: "Unidades disponibles"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 236,
+                                                    lineNumber: 262,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 232,
+                                            lineNumber: 258,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 228,
+                                    lineNumber: 254,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -812,13 +843,13 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                     children: "× TEDDYTWIST"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 243,
+                                                    lineNumber: 269,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 241,
+                                            lineNumber: 267,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -826,13 +857,13 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                             children: '"Rescatamos ositos de peluche que a menudo son abandonados y los convertimos en pieza de colección"'
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 245,
+                                            lineNumber: 271,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 240,
+                                    lineNumber: 266,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -845,18 +876,18 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/product-hero.tsx",
-                                        lineNumber: 252,
+                                        lineNumber: 278,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "h-12 w-32 bg-muted animate-pulse rounded"
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-hero.tsx",
-                                        lineNumber: 254,
+                                        lineNumber: 280,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 250,
+                                    lineNumber: 276,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -866,7 +897,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                             className: "w-5 h-5 text-accent flex-shrink-0 mt-0.5"
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 259,
+                                            lineNumber: 285,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -879,20 +910,20 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 261,
+                                                    lineNumber: 287,
                                                     columnNumber: 17
                                                 }, this),
                                                 " Una vez agotado, nunca volverá a estar disponible."
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 260,
+                                            lineNumber: 286,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 258,
+                                    lineNumber: 284,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -911,44 +942,44 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                         children: isProcessing ? "PROCESANDO..." : "ADOPTAR A BUZZY"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/product-hero.tsx",
-                                                        lineNumber: 269,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 268,
+                                                    lineNumber: 294,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
-                                                    className: "sm:max-w-4xl",
+                                                    className: "sm:max-w-4xl max-h-[90vh] overflow-y-auto",
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "grid md:grid-cols-2 gap-6 items-center",
+                                                        className: "grid md:grid-cols-2 gap-4 md:gap-6 items-start",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "flex flex-col justify-center",
+                                                                className: "flex flex-col justify-center order-2 md:order-1",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogHeader"], {
                                                                         children: [
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogTitle"], {
-                                                                                className: "text-xl sm:text-2xl font-bold text-left",
+                                                                                className: "text-lg sm:text-xl md:text-2xl font-bold text-left",
                                                                                 children: "Selecciona tu ubicación"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 281,
+                                                                                lineNumber: 307,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
-                                                                                className: "text-left pt-2",
+                                                                                className: "text-sm sm:text-base text-left pt-2",
                                                                                 children: "¿El envío es dentro de Córdoba capital o fuera de Córdoba?"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 284,
+                                                                                lineNumber: 310,
                                                                                 columnNumber: 25
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 280,
+                                                                        lineNumber: 306,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -956,7 +987,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                         children: error
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 289,
+                                                                        lineNumber: 315,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -975,7 +1006,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                             children: "Córdoba Capital"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                            lineNumber: 301,
+                                                                                            lineNumber: 327,
                                                                                             columnNumber: 29
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -991,7 +1022,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                                             ]
                                                                                                         }, void 0, true, {
                                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                                            lineNumber: 306,
+                                                                                                            lineNumber: 332,
                                                                                                             columnNumber: 37
                                                                                                         }, this),
                                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1002,7 +1033,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                                             ]
                                                                                                         }, void 0, true, {
                                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                                            lineNumber: 307,
+                                                                                                            lineNumber: 333,
                                                                                                             columnNumber: 37
                                                                                                         }, this)
                                                                                                     ]
@@ -1012,18 +1043,18 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                            lineNumber: 302,
+                                                                                            lineNumber: 328,
                                                                                             columnNumber: 29
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                                    lineNumber: 300,
+                                                                                    lineNumber: 326,
                                                                                     columnNumber: 27
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 294,
+                                                                                lineNumber: 320,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1040,7 +1071,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                             children: "Fuera de Córdoba"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                            lineNumber: 327,
+                                                                                            lineNumber: 353,
                                                                                             columnNumber: 29
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1056,7 +1087,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                                             ]
                                                                                                         }, void 0, true, {
                                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                                            lineNumber: 332,
+                                                                                                            lineNumber: 358,
                                                                                                             columnNumber: 37
                                                                                                         }, this),
                                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1067,7 +1098,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                                             ]
                                                                                                         }, void 0, true, {
                                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                                            lineNumber: 333,
+                                                                                                            lineNumber: 359,
                                                                                                             columnNumber: 37
                                                                                                         }, this)
                                                                                                     ]
@@ -1077,24 +1108,24 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                            lineNumber: 328,
+                                                                                            lineNumber: 354,
                                                                                             columnNumber: 29
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                                    lineNumber: 326,
+                                                                                    lineNumber: 352,
                                                                                     columnNumber: 27
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 319,
+                                                                                lineNumber: 345,
                                                                                 columnNumber: 25
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 293,
+                                                                        lineNumber: 319,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1107,14 +1138,14 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                         className: "w-4 h-4"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                                        lineNumber: 349,
+                                                                                        lineNumber: 375,
                                                                                         columnNumber: 27
                                                                                     }, this),
                                                                                     "¿Tenés un código de descuento?"
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 348,
+                                                                                lineNumber: 374,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             !appliedDiscount ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1133,7 +1164,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                         className: "uppercase"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                                        lineNumber: 354,
+                                                                                        lineNumber: 380,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1144,13 +1175,13 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                         children: isValidatingDiscount ? "..." : "Aplicar"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                                        lineNumber: 366,
+                                                                                        lineNumber: 392,
                                                                                         columnNumber: 29
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 353,
+                                                                                lineNumber: 379,
                                                                                 columnNumber: 27
                                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 className: "bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between",
@@ -1165,7 +1196,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                                lineNumber: 378,
+                                                                                                lineNumber: 404,
                                                                                                 columnNumber: 31
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1177,13 +1208,13 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                                lineNumber: 379,
+                                                                                                lineNumber: 405,
                                                                                                 columnNumber: 31
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                                        lineNumber: 377,
+                                                                                        lineNumber: 403,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1195,18 +1226,18 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                             className: "w-4 h-4"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/components/product-hero.tsx",
-                                                                                            lineNumber: 382,
+                                                                                            lineNumber: 408,
                                                                                             columnNumber: 31
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                                        lineNumber: 381,
+                                                                                        lineNumber: 407,
                                                                                         columnNumber: 29
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 376,
+                                                                                lineNumber: 402,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             discountError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1214,26 +1245,26 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                 children: discountError
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 386,
+                                                                                lineNumber: 412,
                                                                                 columnNumber: 43
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 347,
+                                                                        lineNumber: 373,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                lineNumber: 279,
+                                                                lineNumber: 305,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "flex flex-col items-center justify-start",
+                                                                className: "flex flex-col items-center justify-start order-1 md:order-2",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "relative w-full max-w-sm",
+                                                                        className: "relative w-full max-w-[280px] sm:max-w-sm mx-auto",
                                                                         children: [
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                                                 src: "/images/sin-20numero.webp",
@@ -1243,59 +1274,59 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                                 className: "w-full h-auto object-contain"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 392,
+                                                                                lineNumber: 418,
                                                                                 columnNumber: 25
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                                className: "absolute bottom-[20%] left-1/2 -translate-x-1/2 w-[45%]",
+                                                                                className: "absolute left-1/2 -translate-x-1/2 bottom-[20%]",
                                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                                    className: "text-black font-black text-lg sm:text-xl text-center leading-none",
+                                                                                    className: `text-black font-black text-base sm:text-lg md:text-xl text-center leading-none whitespace-nowrap ${serialLoaded ? 'animate-serial-appear' : 'opacity-0'}`,
                                                                                     children: mounted ? serialNumber : "001/900"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                                    lineNumber: 400,
+                                                                                    lineNumber: 426,
                                                                                     columnNumber: 27
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                                lineNumber: 399,
+                                                                                lineNumber: 425,
                                                                                 columnNumber: 25
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 391,
+                                                                        lineNumber: 417,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                        className: "text-sm text-muted-foreground text-center mt-1",
+                                                                        className: "text-xs sm:text-sm text-muted-foreground text-center mt-1",
                                                                         children: "Numero de serie que adquirirás"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 405,
+                                                                        lineNumber: 435,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                lineNumber: 390,
+                                                                lineNumber: 416,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/product-hero.tsx",
-                                                        lineNumber: 278,
+                                                        lineNumber: 304,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 277,
+                                                    lineNumber: 303,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 267,
+                                            lineNumber: 293,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1303,7 +1334,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                             children: "Envío gratuito dentro de Córdoba capital • Garantía de un mes"
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 411,
+                                            lineNumber: 441,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$collapsible$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Collapsible"], {
@@ -1326,24 +1357,24 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                         className: `w-4 h-4 ml-1 transition-transform ${isOpen ? "rotate-180" : ""}`
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/product-hero.tsx",
-                                                                        lineNumber: 421,
+                                                                        lineNumber: 451,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                lineNumber: 419,
+                                                                lineNumber: 449,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/product-hero.tsx",
-                                                            lineNumber: 418,
+                                                            lineNumber: 448,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 416,
+                                                    lineNumber: 446,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$collapsible$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CollapsibleContent"], {
@@ -1354,7 +1385,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                             children: "Más de $3000 USD en premios!!"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/product-hero.tsx",
-                                                            lineNumber: 426,
+                                                            lineNumber: 456,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1364,7 +1395,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "¿Cómo participar del sorteo?"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 429,
+                                                                    lineNumber: 459,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1372,20 +1403,20 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: '¡Es muy fácil! Con la compra de un TeddyTwist, automáticamente estás participando en todos los sorteos. El número de serie de "edición limitada" del 001 al 900 que sale en el packaging del producto, será tu número con el que participarás en los sorteos. Cuantas más unidades se vendan, mayores serán los premios.'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 430,
+                                                                    lineNumber: 460,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                     children: "Si no ganas el primer premio, ¡no te preocupes! Tenés más oportunidades en los siguientes sorteos. La suma total de los premios es de $3,150 USD."
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 436,
+                                                                    lineNumber: 466,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/product-hero.tsx",
-                                                            lineNumber: 428,
+                                                            lineNumber: 458,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1396,7 +1427,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "Sorteo de $150 USD al vender 150 unidades"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 443,
+                                                                    lineNumber: 473,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1404,7 +1435,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "Sorteo de $300 USD al vender 300 unidades"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 444,
+                                                                    lineNumber: 474,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1412,7 +1443,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "Sorteo de $450 USD al vender 450 unidades"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 445,
+                                                                    lineNumber: 475,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1420,7 +1451,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "Sorteo de $600 USD al vender 600 unidades"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 446,
+                                                                    lineNumber: 476,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1428,7 +1459,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "Sorteo de $750 USD al vender 750 unidades"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 447,
+                                                                    lineNumber: 477,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1436,13 +1467,13 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                     children: "Sorteo de $900 USD al vender 900 unidades"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/product-hero.tsx",
-                                                                    lineNumber: 448,
+                                                                    lineNumber: 478,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/product-hero.tsx",
-                                                            lineNumber: 442,
+                                                            lineNumber: 472,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1450,7 +1481,7 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                             children: "Hasta que no se cumplan dichas ventas no habrá sorteo."
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/product-hero.tsx",
-                                                            lineNumber: 451,
+                                                            lineNumber: 481,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1458,19 +1489,19 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                             children: "¡No te quedes sin tu TeddyTwist y participa por increíbles premios!"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/product-hero.tsx",
-                                                            lineNumber: 453,
+                                                            lineNumber: 483,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 425,
+                                                    lineNumber: 455,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 415,
+                                            lineNumber: 445,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1490,19 +1521,19 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                 className: "w-5 h-5 mr-2"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                lineNumber: 467,
+                                                                lineNumber: 497,
                                                                 columnNumber: 21
                                                             }, this),
                                                             "Seguinos en Instagram"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/product-hero.tsx",
-                                                        lineNumber: 466,
+                                                        lineNumber: 496,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 460,
+                                                    lineNumber: 490,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1519,68 +1550,68 @@ const ProductHero = /*#__PURE__*/ _s((0, __TURBOPACK__imported__module__$5b$proj
                                                                 className: "w-5 h-5 mr-2"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/product-hero.tsx",
-                                                                lineNumber: 483,
+                                                                lineNumber: 513,
                                                                 columnNumber: 21
                                                             }, this),
                                                             "Consultas"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/product-hero.tsx",
-                                                        lineNumber: 478,
+                                                        lineNumber: 508,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-hero.tsx",
-                                                    lineNumber: 472,
+                                                    lineNumber: 502,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-hero.tsx",
-                                            lineNumber: 459,
+                                            lineNumber: 489,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/product-hero.tsx",
-                                    lineNumber: 266,
+                                    lineNumber: 292,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/product-hero.tsx",
-                            lineNumber: 227,
+                            lineNumber: 253,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/product-hero.tsx",
-                    lineNumber: 200,
+                    lineNumber: 226,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/product-hero.tsx",
-                lineNumber: 199,
+                lineNumber: 225,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent"
             }, void 0, false, {
                 fileName: "[project]/components/product-hero.tsx",
-                lineNumber: 493,
+                lineNumber: 523,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/product-hero.tsx",
-        lineNumber: 183,
+        lineNumber: 209,
         columnNumber: 5
     }, this);
-}, "CBXEPrpWGIhPtSEBAN4rIOTstY4=", false, function() {
+}, "NI7xakoq1pHdqyyEBGXRgHMLUjE=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useRealtimeStock$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRealtimeStock"]
     ];
-})), "CBXEPrpWGIhPtSEBAN4rIOTstY4=", false, function() {
+})), "NI7xakoq1pHdqyyEBGXRgHMLUjE=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useRealtimeStock$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRealtimeStock"]
     ];
