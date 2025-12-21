@@ -21,6 +21,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isHovering, setIsHovering] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [isShippingDialogOpen, setIsShippingDialogOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -51,6 +52,13 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
 
   useEffect(() => {
     setMounted(true)
+    // Detectar si es un dispositivo móvil
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024) // lg breakpoint
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   // El stock ahora se actualiza en tiempo real via useRealtimeStock hook
@@ -231,19 +239,19 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
             >
-              {!isHovering ? (
-                <img
-                  src="/images/screenshot001.webp"
-                  alt="BUZZY × TEDDYTWIST Limited Edition"
-                  className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
-                />
-              ) : (
+              {isMobile || isHovering ? (
                 <video
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EDICION_LIMITADA_01_comprimido-hOkKkPg8zTsPZEFndyLe0cTiLDRg4Z.mp4"
                   autoPlay
                   loop
                   muted
                   playsInline
+                  className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
+                />
+              ) : (
+                <img
+                  src="/images/screenshot001.webp"
+                  alt="BUZZY × TEDDYTWIST Limited Edition"
                   className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                 />
               )}
