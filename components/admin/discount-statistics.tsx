@@ -64,6 +64,11 @@ export function DiscountStatistics() {
   const [currentPage, setCurrentPage] = useState(1)
   const codesPerPage = 10
 
+  // Delete confirmation modal state
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [codeToDelete, setCodeToDelete] = useState<{ id: number; codigo: string } | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+
   // Form state for new discount code
   const [newCode, setNewCode] = useState({
     codigo: "",
@@ -163,26 +168,36 @@ export function DiscountStatistics() {
     }
   }
 
-  const handleDeleteCode = async (codeId: number, codigo: string) => {
-    if (!confirm(`¿Estás seguro de eliminar el código "${codigo}"? Esta acción no se puede deshacer.`)) {
-      return
-    }
+  const openDeleteConfirmation = (codeId: number, codigo: string) => {
+    setCodeToDelete({ id: codeId, codigo })
+    setIsDeleteModalOpen(true)
+  }
 
+  const handleConfirmDelete = async () => {
+    if (!codeToDelete) return
+
+    setIsDeleting(true)
     try {
-      const response = await fetch(`/api/admin/discount-codes/${codeId}`, {
+      const response = await fetch(`/api/admin/discount-codes/${codeToDelete.id}`, {
         method: "DELETE",
       })
 
       if (response.ok) {
-        alert("Código eliminado exitosamente")
-        fetchStats()
+        setIsDeleteModalOpen(false)
+        setCodeToDelete(null)
+        // Refresh the list from database
+        await fetchStats()
       } else {
         const error = await response.json()
-        alert(error.error || "Error al eliminar código de descuento")
+        console.error("[admin] Delete error:", error.error)
+        // Keep modal open to show the error wasn't successful
+        // User can try again or cancel
       }
     } catch (error) {
       console.error("[admin] Error deleting discount code:", error)
-      alert("Error al eliminar código de descuento")
+      // Keep modal open on error
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -457,9 +472,10 @@ export function DiscountStatistics() {
                             {code.activo ? "Desactivar" : "Activar"}
                           </Button>
                           <Button
-                            variant="destructive"
+                            variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteCode(code.id, code.codigo)}
+                            onClick={() => openDeleteConfirmation(code.id, code.codigo)}
+                            className="text-muted-foreground hover:text-destructive"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -617,6 +633,51 @@ export function DiscountStatistics() {
                 </>
               ) : (
                 "Crear Código"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que querés eliminar el código de descuento <strong className="text-foreground">"{codeToDelete?.codigo}"</strong>?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p className="text-sm text-amber-800 dark:text-amber-200">
+              Esta acción no se puede deshacer. El código será eliminado permanentemente de la base de datos.
+            </p>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteModalOpen(false)
+                setCodeToDelete(null)
+              }}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Eliminando...
+                </>
+              ) : (
+                "Eliminar Código"
               )}
             </Button>
           </DialogFooter>
