@@ -91,12 +91,12 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     if (isShippingDialogOpen) {
       document.body.style.overflow = 'hidden'
       document.body.style.paddingRight = 'var(--scrollbar-width, 0px)'
+      // Reset processing state and errors when modal opens
+      setIsProcessing(false)
+      setError(null)
     } else {
       document.body.style.overflow = ''
       document.body.style.paddingRight = ''
-      // Reset processing state and errors when modal closes
-      setIsProcessing(false)
-      setError(null)
     }
 
     return () => {
