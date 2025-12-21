@@ -94,6 +94,9 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     } else {
       document.body.style.overflow = ''
       document.body.style.paddingRight = ''
+      // Reset processing state and errors when modal closes
+      setIsProcessing(false)
+      setError(null)
     }
 
     return () => {
