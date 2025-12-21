@@ -239,9 +239,18 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
             >
-              {isMobile || isHovering ? (
+              {isMobile ? (
                 <video
-                  src={isMobile ? "/videos/video_principal_web.mp4" : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EDICION_LIMITADA_01_comprimido-hOkKkPg8zTsPZEFndyLe0cTiLDRg4Z.mp4"}
+                  src="/videos/video_principal_web.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
+                />
+              ) : isHovering ? (
+                <video
+                  src="/videos/animation_teddytwist.mp4"
                   autoPlay
                   loop
                   muted
@@ -250,7 +259,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                 />
               ) : (
                 <img
-                  src="/images/screenshot001.webp"
+                  src="/images/screenshot001.png"
                   alt="BUZZY × TEDDYTWIST Limited Edition"
                   className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                 />
