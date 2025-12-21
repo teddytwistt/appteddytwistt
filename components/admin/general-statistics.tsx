@@ -109,20 +109,11 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
     }),
     datasets: [
       {
-        label: "Ventas ($)",
+        label: "Ingresos ($)",
         data: stats.daily_sales.map((sale) => sale.revenue),
         borderColor: "rgba(6, 182, 212, 1)",
         backgroundColor: "rgba(6, 182, 212, 0.1)",
         tension: 0.4,
-        yAxisID: "y",
-      },
-      {
-        label: "Cantidad de Pedidos",
-        data: stats.daily_sales.map((sale) => sale.count),
-        borderColor: "rgba(251, 191, 36, 1)",
-        backgroundColor: "rgba(251, 191, 36, 0.1)",
-        tension: 0.4,
-        yAxisID: "y1",
       },
     ],
   }
@@ -146,33 +137,6 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
         data: [stats.geography.cba.paid_orders, stats.geography.interior.paid_orders],
         backgroundColor: ["rgba(34, 197, 94, 0.7)", "rgba(234, 179, 8, 0.7)"],
         borderColor: ["rgba(34, 197, 94, 1)", "rgba(234, 179, 8, 1)"],
-        borderWidth: 1,
-      },
-    ],
-  }
-
-  const paymentStatusData = {
-    labels: ["Pagado", "Pendiente", "Fallido", "Reembolsado"],
-    datasets: [
-      {
-        data: [
-          stats.payment_status.pagado,
-          stats.payment_status.pendiente,
-          stats.payment_status.fallido,
-          stats.payment_status.reembolsado,
-        ],
-        backgroundColor: [
-          "rgba(34, 197, 94, 0.7)",
-          "rgba(251, 191, 36, 0.7)",
-          "rgba(239, 68, 68, 0.7)",
-          "rgba(156, 163, 175, 0.7)",
-        ],
-        borderColor: [
-          "rgba(34, 197, 94, 1)",
-          "rgba(251, 191, 36, 1)",
-          "rgba(239, 68, 68, 1)",
-          "rgba(156, 163, 175, 1)",
-        ],
         borderWidth: 1,
       },
     ],
@@ -210,18 +174,6 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
         title: {
           display: true,
           text: "Ingresos ($)",
-        },
-      },
-      y1: {
-        type: "linear" as const,
-        display: true,
-        position: "right" as const,
-        title: {
-          display: true,
-          text: "Cantidad",
-        },
-        grid: {
-          drawOnChartArea: false,
         },
       },
     },
@@ -297,7 +249,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <CardTitle>Ventas Últimos {days} Días</CardTitle>
-              <CardDescription>Evolución de ingresos y cantidad de pedidos</CardDescription>
+              <CardDescription>Evolución de ingresos</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">Mostrar:</span>
@@ -348,20 +300,6 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
             <div className="h-[300px] flex items-center justify-center">
               <div className="w-full max-w-[250px]">
                 <Pie data={geographyOrdersData} options={pieChartOptions} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Estado de Pagos</CardTitle>
-            <CardDescription>Distribución de estados de pago</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px] flex items-center justify-center">
-              <div className="w-full max-w-[250px]">
-                <Pie data={paymentStatusData} options={pieChartOptions} />
               </div>
             </div>
           </CardContent>
