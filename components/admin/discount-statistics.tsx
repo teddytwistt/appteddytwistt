@@ -103,8 +103,8 @@ export function DiscountStatistics() {
           codigo: newCode.codigo.toUpperCase(),
           porcentaje_descuento: parseInt(newCode.porcentaje_descuento),
           usos_maximos: newCode.usos_maximos ? parseInt(newCode.usos_maximos) : null,
-          valido_desde: newCode.valido_desde || new Date().toISOString(),
-          valido_hasta: newCode.valido_hasta || null,
+          valido_desde: newCode.valido_desde ? new Date(newCode.valido_desde).toISOString() : new Date().toISOString(),
+          valido_hasta: newCode.valido_hasta ? new Date(newCode.valido_hasta).toISOString() : null,
           descripcion: newCode.descripcion || null,
           activo: newCode.activo,
         }),
@@ -413,6 +413,8 @@ export function DiscountStatistics() {
                   <TableHead>Código</TableHead>
                   <TableHead>Descuento</TableHead>
                   <TableHead>Estado</TableHead>
+                  <TableHead>Válido Desde</TableHead>
+                  <TableHead>Válido Hasta</TableHead>
                   <TableHead>Usos</TableHead>
                   <TableHead>Usos Exitosos</TableHead>
                   <TableHead>Ingresos</TableHead>
@@ -424,7 +426,7 @@ export function DiscountStatistics() {
               <TableBody>
                 {filteredCodes.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground">
+                    <TableCell colSpan={11} className="text-center text-muted-foreground">
                       {searchQuery ? "No se encontraron códigos con esa búsqueda" : "No hay códigos de descuento"}
                     </TableCell>
                   </TableRow>
@@ -437,6 +439,22 @@ export function DiscountStatistics() {
                       </TableCell>
                       <TableCell>
                         <Badge variant={code.activo ? "default" : "secondary"}>{code.activo ? "Activo" : "Inactivo"}</Badge>
+                      </TableCell>
+                      <TableCell className="text-sm whitespace-nowrap">
+                        {new Date(code.valido_desde).toLocaleDateString("es-AR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric"
+                        })}
+                      </TableCell>
+                      <TableCell className="text-sm whitespace-nowrap">
+                        {code.valido_hasta
+                          ? new Date(code.valido_hasta).toLocaleDateString("es-AR", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric"
+                            })
+                          : "Sin límite"}
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">

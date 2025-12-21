@@ -43,12 +43,17 @@ export default function AdminPage() {
   // Estado para buscador de pedidos
   const [searchQuery, setSearchQuery] = useState("")
 
+  // Estado para paginación
+  const [currentPage, setCurrentPage] = useState(1)
+  const ordersPerPage = 10
+
   useEffect(() => {
     fetchData()
   }, [])
 
   useEffect(() => {
     applyFilters()
+    setCurrentPage(1) // Reset to first page when filters change
   }, [orders, estadoPagoFilter, estadoEnvioFilter, searchQuery])
 
   // Bloquear scroll del body cuando el modal de detalles está abierto
@@ -176,6 +181,12 @@ export default function AdminPage() {
 
   const totalVentas = orders.filter((o) => o.estado_pago === "pagado").reduce((sum, o) => sum + o.monto_final, 0)
   const pedidosPendientes = orders.filter((o) => o.estado_envio === "pendiente" && o.estado_pago === "pagado").length
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage)
+  const startIndex = (currentPage - 1) * ordersPerPage
+  const endIndex = startIndex + ordersPerPage
+  const paginatedOrders = filteredOrders.slice(startIndex, endIndex)
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -369,14 +380,14 @@ export default function AdminPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredOrders.length === 0 ? (
+                  {paginatedOrders.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center text-muted-foreground">
                         {searchQuery ? "No se encontraron pedidos con esa búsqueda" : "No hay pedidos que mostrar"}
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredOrders.map((order) => (
+                    paginatedOrders.map((order) => (
                       <TableRow key={order.id}>
                         <TableCell className="font-mono text-xs">
                           #{order.id}
@@ -426,6 +437,36 @@ export default function AdminPage() {
                 </TableBody>
               </Table>
             </div>
+
+            {/* Pagination Controls */}
+            {filteredOrders.length > 0 && (
+              <div className="flex items-center justify-between pt-4">
+                <div className="text-sm text-muted-foreground">
+                  Mostrando {startIndex + 1} a {Math.min(endIndex, filteredOrders.length)} de {filteredOrders.length} pedidos
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Anterior
+                  </Button>
+                  <div className="text-sm font-medium px-3">
+                    Página {currentPage} de {totalPages}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Siguiente
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
           </>
