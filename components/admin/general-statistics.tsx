@@ -163,7 +163,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
     },
     plugins: {
       legend: {
-        position: "top" as const,
+        display: false,
       },
     },
     scales: {
