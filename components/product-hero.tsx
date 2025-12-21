@@ -58,7 +58,22 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     }
     checkMobile()
     window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+
+    // Reset processing state when page is restored from cache (e.g., back button)
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // Page was restored from bfcache
+        setIsProcessing(false)
+        setError(null)
+      }
+    }
+
+    window.addEventListener('pageshow', handlePageShow)
+
+    return () => {
+      window.removeEventListener('resize', checkMobile)
+      window.removeEventListener('pageshow', handlePageShow)
+    }
   }, [])
 
   // El stock ahora se actualiza en tiempo real via useRealtimeStock hook
@@ -91,9 +106,6 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     if (isShippingDialogOpen) {
       document.body.style.overflow = 'hidden'
       document.body.style.paddingRight = 'var(--scrollbar-width, 0px)'
-      // Reset processing state and errors when modal opens
-      setIsProcessing(false)
-      setError(null)
     } else {
       document.body.style.overflow = ''
       document.body.style.paddingRight = ''
