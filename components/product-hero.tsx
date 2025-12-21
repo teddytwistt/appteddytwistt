@@ -241,7 +241,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
             >
               {isMobile || isHovering ? (
                 <video
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EDICION_LIMITADA_01_comprimido-hOkKkPg8zTsPZEFndyLe0cTiLDRg4Z.mp4"
+                  src={isMobile ? "/videos/video_principal_web.mp4" : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EDICION_LIMITADA_01_comprimido-hOkKkPg8zTsPZEFndyLe0cTiLDRg4Z.mp4"}
                   autoPlay
                   loop
                   muted

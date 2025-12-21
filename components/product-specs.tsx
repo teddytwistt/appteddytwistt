@@ -101,25 +101,29 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
                 }}
               >
                 {layers.map((layer, index) => (
-                  <img
+                  <div
                     key={index}
-                    src={layer.src}
-                    alt={`Pieza ${index + 1} del despiece TeddyTwist`}
-                    className={`absolute inset-0 w-full h-full object-contain select-none ${isMobile ? layer.animation : ""}`}
-                    draggable="false"
-                    loading="lazy"
-                    style={
-                      isMobile
-                        ? {
-                            filter: `drop-shadow(0 20px 30px rgba(6, 182, 212, ${0.3 - index * 0.05}))`,
-                          }
-                        : {
-                            transform: `perspective(1000px) rotateX(${transform.rotateX * layer.depth}deg) rotateY(${transform.rotateY * layer.depth}deg) scale(${1 + (transform.scale - 1) * layer.depth}) translateZ(${index * 20}px)`,
-                            transition: "transform 0.2s ease-out",
-                            filter: `drop-shadow(0 ${transform.scale === 1.05 ? 30 + index * 5 : 20 + index * 3}px ${transform.scale === 1.05 ? 40 + index * 5 : 30 + index * 3}px rgba(6, 182, 212, ${transform.scale === 1.05 ? 0.4 - index * 0.05 : 0.2 - index * 0.03}))`,
-                          }
-                    }
-                  />
+                    className={`absolute inset-0 w-full h-full ${layer.animation}`}
+                  >
+                    <img
+                      src={layer.src}
+                      alt={`Pieza ${index + 1} del despiece TeddyTwist`}
+                      className="absolute inset-0 w-full h-full object-contain select-none"
+                      draggable="false"
+                      loading="lazy"
+                      style={
+                        isMobile
+                          ? {
+                              filter: `drop-shadow(0 20px 30px rgba(6, 182, 212, ${0.3 - index * 0.05}))`,
+                            }
+                          : {
+                              transform: `perspective(1000px) rotateX(${transform.rotateX * layer.depth}deg) rotateY(${transform.rotateY * layer.depth}deg) scale(${1 + (transform.scale - 1) * layer.depth}) translateZ(${index * 20}px)`,
+                              transition: "transform 0.2s ease-out",
+                              filter: `drop-shadow(0 ${transform.scale === 1.05 ? 30 + index * 5 : 20 + index * 3}px ${transform.scale === 1.05 ? 40 + index * 5 : 30 + index * 3}px rgba(6, 182, 212, ${transform.scale === 1.05 ? 0.4 - index * 0.05 : 0.2 - index * 0.03}))`,
+                            }
+                      }
+                    />
+                  </div>
                 ))}
               </div>
             </div>
