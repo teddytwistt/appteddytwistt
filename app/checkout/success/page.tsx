@@ -195,24 +195,27 @@ function SuccessPageContent() {
             </p>
 
             {/* Debug info del email - SIEMPRE VISIBLE */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-xs mt-4">
-              <p className="font-bold mb-2">🔍 Estado del Email (DEBUG):</p>
+            <div className="bg-blue-100 border-2 border-blue-400 rounded-lg p-4 text-sm mt-4">
+              <p className="font-bold mb-3 text-blue-900 text-base">🔍 Estado del Email (DEBUG):</p>
               {emailDebugInfo ? (
                 <>
-                  <p><strong>Status:</strong> {emailDebugInfo.email_status || 'no status'}</p>
-                  <p><strong>Pedido ID:</strong> {emailDebugInfo.pedido_id || 'no id'}</p>
+                  <p className="text-gray-900 mb-2"><strong className="text-blue-800">Status:</strong> <span className="font-mono bg-blue-200 px-2 py-1 rounded">{emailDebugInfo.email_status || 'no status'}</span></p>
+                  <p className="text-gray-900 mb-2"><strong className="text-blue-800">Pedido ID:</strong> <span className="font-mono bg-blue-200 px-2 py-1 rounded">{emailDebugInfo.pedido_id || 'no id'}</span></p>
                   {emailDebugInfo.email_error && (
-                    <p className="text-red-600 mt-2"><strong>❌ Error:</strong> {emailDebugInfo.email_error}</p>
+                    <div className="bg-red-100 border-2 border-red-400 rounded p-3 mt-3">
+                      <p className="text-red-800 font-bold mb-1">❌ Error:</p>
+                      <p className="text-red-900 font-mono text-xs">{emailDebugInfo.email_error}</p>
+                    </div>
                   )}
-                  <details className="mt-2">
-                    <summary className="cursor-pointer font-semibold">Ver respuesta completa</summary>
-                    <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto">
+                  <details className="mt-3">
+                    <summary className="cursor-pointer font-semibold text-blue-800 hover:text-blue-600">📄 Ver respuesta completa</summary>
+                    <pre className="mt-2 bg-gray-900 text-green-400 p-3 rounded text-xs overflow-auto max-h-96">
                       {JSON.stringify(emailDebugInfo, null, 2)}
                     </pre>
                   </details>
                 </>
               ) : (
-                <p className="text-orange-600">⚠️ No se recibió información de debug. Esto es extraño.</p>
+                <p className="text-orange-800 bg-orange-100 border border-orange-400 rounded p-2">⚠️ No se recibió información de debug. Esto es extraño.</p>
               )}
             </div>
 
