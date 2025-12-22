@@ -271,7 +271,7 @@ export function EmailConfirmacionCompra({
               ${numeroSerie ? `
                 <div class="detail-row">
                   <span class="label">Número de Serie</span>
-                  <span class="serie-badge">${String(numeroSerie).padStart(3, "0")}/900</span>
+                  <span class="value">${String(numeroSerie).padStart(3, "0")}/900</span>
                 </div>
               ` : ''}
 
@@ -898,11 +898,9 @@ export function EmailConfirmacionCompleta({
 
           <!-- Content -->
           <div class="content">
-            <div class="success-icon">🎉</div>
-            <h2 class="title">¡Compra Confirmada!</h2>
+            <h2 class="title">¡Gracias por Adoptar a BUZZY!</h2>
             <p class="subtitle">
-              Hola <strong>${nombreCliente}</strong>,<br>
-              Tu pago ha sido confirmado exitosamente. ¡Ya sos parte de la edición limitada!
+              Tu nuevo osito de peluche está en camino.
             </p>
 
             <!-- Detalles del Pedido -->
@@ -917,7 +915,7 @@ export function EmailConfirmacionCompleta({
               ${numeroSerie ? `
                 <div class="detail-row">
                   <span class="label">Número de Serie</span>
-                  <span class="serie-badge">${String(numeroSerie).padStart(3, "0")}/900</span>
+                  <span class="value">${String(numeroSerie).padStart(3, "0")}/900</span>
                 </div>
               ` : ''}
 
