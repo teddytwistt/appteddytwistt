@@ -194,16 +194,27 @@ function SuccessPageContent() {
               Recibirás tu Buzzy Twist en 3-5 días hábiles. ¡Gracias por tu compra!
             </p>
 
-            {/* Debug info del email */}
-            {emailDebugInfo && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-xs">
-                <p className="font-bold mb-2">Estado del Email (DEBUG):</p>
-                <p><strong>Status:</strong> {emailDebugInfo.email_status || 'no info'}</p>
-                {emailDebugInfo.email_error && (
-                  <p className="text-red-600"><strong>Error:</strong> {emailDebugInfo.email_error}</p>
-                )}
-              </div>
-            )}
+            {/* Debug info del email - SIEMPRE VISIBLE */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-xs mt-4">
+              <p className="font-bold mb-2">🔍 Estado del Email (DEBUG):</p>
+              {emailDebugInfo ? (
+                <>
+                  <p><strong>Status:</strong> {emailDebugInfo.email_status || 'no status'}</p>
+                  <p><strong>Pedido ID:</strong> {emailDebugInfo.pedido_id || 'no id'}</p>
+                  {emailDebugInfo.email_error && (
+                    <p className="text-red-600 mt-2"><strong>❌ Error:</strong> {emailDebugInfo.email_error}</p>
+                  )}
+                  <details className="mt-2">
+                    <summary className="cursor-pointer font-semibold">Ver respuesta completa</summary>
+                    <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto">
+                      {JSON.stringify(emailDebugInfo, null, 2)}
+                    </pre>
+                  </details>
+                </>
+              ) : (
+                <p className="text-orange-600">⚠️ No se recibió información de debug. Esto es extraño.</p>
+              )}
+            </div>
 
             <Button onClick={() => router.push("/")} className="w-full">
               Volver al inicio
