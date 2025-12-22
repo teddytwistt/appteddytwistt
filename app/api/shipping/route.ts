@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/server-admin"
 import { resend, FROM_EMAIL } from "@/lib/email/resend"
-import { EmailConfirmacionCompra, EmailDatosEnvioRecibidos } from "@/lib/email/templates"
+import { EmailConfirmacionCompleta } from "@/lib/email/templates"
 
 export async function POST(request: NextRequest) {
   try {
@@ -107,44 +107,32 @@ export async function POST(request: NextRequest) {
 
     console.log("[v0] Order updated successfully")
 
-    // Enviar emails de confirmación al cliente
+    // Enviar email de confirmación completo al cliente
     try {
-      // Email de confirmación de compra
-      const htmlConfirmacion = EmailConfirmacionCompra({
+      // Email unificado con toda la información de compra y envío
+      const htmlEmail = EmailConfirmacionCompleta({
         nombreCliente: nombre_apellido,
         numeroPedido: orderData.id,
         numeroSerie: numeroSerie || undefined,
         monto: orderData.monto_final,
         zona: orderData.zona,
         fechaPago: orderData.fecha_pago || new Date().toISOString(),
-      })
-
-      // Email de confirmación de datos de envío
-      const htmlEnvio = EmailDatosEnvioRecibidos({
-        nombreCliente: nombre_apellido,
-        numeroPedido: orderData.id,
         direccion: direccion_completa,
         ciudad: ciudad,
         provincia: provincia,
+        telefono: telefono,
+        dni: dni,
       })
 
-      // Enviar ambos emails
-      await Promise.all([
-        resend.emails.send({
-          from: FROM_EMAIL,
-          to: email,
-          subject: `¡Compra Confirmada! Pedido #${orderData.id} - Buzzy Twist`,
-          html: htmlConfirmacion,
-        }),
-        resend.emails.send({
-          from: FROM_EMAIL,
-          to: email,
-          subject: `Datos de Envío Recibidos - Pedido #${orderData.id}`,
-          html: htmlEnvio,
-        }),
-      ])
+      // Enviar un solo email con toda la información
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: `🎉 ¡Compra Confirmada! Pedido #${String(orderData.id).padStart(4, '0')} - BUZZY × TEDDYTWIST`,
+        html: htmlEmail,
+      })
 
-      console.log("[shipping] Confirmation emails sent successfully to:", email)
+      console.log("[shipping] Confirmation email sent successfully to:", email)
     } catch (emailError) {
       console.error("[shipping] Error sending confirmation emails:", emailError)
       // No bloqueamos el proceso si falla el envío de email
