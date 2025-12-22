@@ -108,7 +108,14 @@ export async function POST(request: NextRequest) {
     console.log("[v0] Order updated successfully")
 
     // Enviar email de confirmación completo al cliente
+    let emailStatus = "not_sent"
+    let emailError = null
+
     try {
+      console.log("[shipping] Starting email send process...")
+      console.log("[shipping] FROM_EMAIL:", FROM_EMAIL)
+      console.log("[shipping] TO:", email)
+
       // Email unificado con toda la información de compra y envío
       const htmlEmail = EmailConfirmacionCompleta({
         nombreCliente: nombre_apellido,
@@ -124,17 +131,23 @@ export async function POST(request: NextRequest) {
         dni: dni,
       })
 
+      console.log("[shipping] Email HTML generated successfully")
+
       // Enviar un solo email con toda la información
-      await resend.emails.send({
+      const result = await resend.emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: `Compra Confirmada - Pedido #${String(orderData.id).padStart(4, '0')} - BUZZY × TEDDYTWIST`,
         html: htmlEmail,
       })
 
+      console.log("[shipping] Resend result:", result)
       console.log("[shipping] Confirmation email sent successfully to:", email)
-    } catch (emailError) {
-      console.error("[shipping] Error sending confirmation emails:", emailError)
+      emailStatus = "sent"
+    } catch (error) {
+      console.error("[shipping] Error sending confirmation email:", error)
+      emailError = error instanceof Error ? error.message : String(error)
+      emailStatus = "failed"
       // No bloqueamos el proceso si falla el envío de email
     }
 
@@ -169,6 +182,8 @@ export async function POST(request: NextRequest) {
       message: "Datos de envío guardados correctamente",
       pedido_id: orderData.id,
       cliente_id: clienteData.id,
+      email_status: emailStatus,
+      email_error: emailError,
       sheets_status: sheetsSuccess ? "sent" : "failed",
       sheets_error: sheetsError ? String(sheetsError) : null,
     })
