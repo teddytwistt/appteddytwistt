@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle, Instagram, ChevronDown, MessageCircle, Tag, X } from "lucide-react"
+import { AlertCircle, Instagram, ChevronDown, MessageCircle, Tag, X, ArrowLeft } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react"
 import {
@@ -14,8 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 import { useRealtimeStock } from "@/hooks/useRealtimeStock"
+import { getNombreProvincias, getLocalidadesByProvincia } from "@/lib/data/argentina-locations"
 
 export const ProductHero = forwardRef<{ openModal: () => void }>(function ProductHero(props, ref) {
   const [mounted, setMounted] = useState(false)
@@ -38,6 +42,21 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
   const [outsidePrice, setOutsidePrice] = useState<number | null>(null)
   const [pricesLoaded, setPricesLoaded] = useState(false)
   const [serialLoaded, setSerialLoaded] = useState(false)
+
+  // Shipping form states
+  const [selectedZone, setSelectedZone] = useState<"cordoba" | "outside" | null>(null)
+  const [showShippingForm, setShowShippingForm] = useState(false)
+  const [shippingFormData, setShippingFormData] = useState({
+    nombre_apellido: "",
+    email: "",
+    telefono: "",
+    dni: "",
+    provincia: "",
+    ciudad: "",
+    direccion_completa: "",
+    comentarios: "",
+  })
+  const [localidadesDisponibles, setLocalidadesDisponibles] = useState<string[]>([])
 
   // Hook para obtener stock en tiempo real
   const { stockData } = useRealtimeStock()
@@ -190,12 +209,55 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     setDiscountError(null)
   }
 
-  const handleShippingSelection = async (location: "cordoba" | "outside") => {
+  // Set default values for Córdoba zone
+  useEffect(() => {
+    if (selectedZone === "cordoba") {
+      setShippingFormData(prev => ({
+        ...prev,
+        provincia: "Córdoba",
+        ciudad: "Córdoba"
+      }))
+    }
+  }, [selectedZone])
+
+  const handleShippingSelection = (location: "cordoba" | "outside") => {
+    setSelectedZone(location)
+    setShowShippingForm(true)
+  }
+
+  const handleShippingFormChange = (field: string, value: string) => {
+    setShippingFormData(prev => ({ ...prev, [field]: value }))
+
+    // Si cambió la provincia, actualizar las localidades disponibles y resetear ciudad
+    if (field === "provincia") {
+      const localidades = getLocalidadesByProvincia(value)
+      setLocalidadesDisponibles(localidades)
+      setShippingFormData(prev => ({ ...prev, ciudad: "" }))
+    }
+  }
+
+  const handleBackToZoneSelection = () => {
+    setShowShippingForm(false)
+    setSelectedZone(null)
+    setShippingFormData({
+      nombre_apellido: "",
+      email: "",
+      telefono: "",
+      dni: "",
+      provincia: "",
+      ciudad: "",
+      direccion_completa: "",
+      comentarios: "",
+    })
+  }
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setIsProcessing(true)
     setError(null)
 
     try {
-      const zona = location === "cordoba" ? "cba" : "interior"
+      const zona = selectedZone === "cordoba" ? "cba" : "interior"
 
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -207,6 +269,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
           discountCode: appliedDiscount?.code || null,
           discountPercentage: appliedDiscount?.percentage || null,
           idDescuento: appliedDiscount?.id_descuento || null,
+          shippingData: shippingFormData,
         }),
       })
 
@@ -333,22 +396,23 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                  <div className="grid md:grid-cols-2 gap-4 md:gap-6 items-start">
-                    <div className="flex flex-col justify-center order-2 md:order-1">
-                      <DialogHeader>
-                        <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold text-left">
-                          Selecciona tu ubicación
-                        </DialogTitle>
-                        <DialogDescription className="text-sm sm:text-base text-left pt-2">
-                          ¿El envío es dentro de Córdoba capital o fuera de Córdoba?
-                        </DialogDescription>
-                      </DialogHeader>
-                      {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm mt-4">
-                          {error}
-                        </div>
-                      )}
-                      <div className="grid gap-4 py-4">
+                  {!showShippingForm ? (
+                    <div className="grid md:grid-cols-2 gap-4 md:gap-6 items-start">
+                      <div className="flex flex-col justify-center order-2 md:order-1">
+                        <DialogHeader>
+                          <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold text-left">
+                            Selecciona tu ubicación
+                          </DialogTitle>
+                          <DialogDescription className="text-sm sm:text-base text-left pt-2">
+                            ¿El envío es dentro de Córdoba capital o fuera de Córdoba?
+                          </DialogDescription>
+                        </DialogHeader>
+                        {error && (
+                          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm mt-4">
+                            {error}
+                          </div>
+                        )}
+                        <div className="grid gap-4 py-4">
                         <Button
                           onClick={() => handleShippingSelection("cordoba")}
                           size="lg"
@@ -467,6 +531,170 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                       <p className="text-xs sm:text-sm text-muted-foreground text-center mt-1">Numero de serie que adquirirás</p>
                     </div>
                   </div>
+                  ) : (
+                    <form onSubmit={handleFormSubmit} className="space-y-6">
+                      <DialogHeader>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleBackToZoneSelection}
+                            className="h-8 w-8 p-0"
+                          >
+                            <ArrowLeft className="h-4 w-4" />
+                          </Button>
+                          <div className="flex-1">
+                            <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold text-left">
+                              Datos de envío
+                            </DialogTitle>
+                            <DialogDescription className="text-sm sm:text-base text-left">
+                              Zona: {selectedZone === "cordoba" ? "Córdoba Capital - Envío gratuito" : "Resto del país - Envío incluido"}
+                            </DialogDescription>
+                          </div>
+                        </div>
+                      </DialogHeader>
+
+                      {error && (
+                        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
+                          {error}
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="nombre_apellido">Nombre y apellido *</Label>
+                          <Input
+                            id="nombre_apellido"
+                            required
+                            value={shippingFormData.nombre_apellido}
+                            onChange={(e) => handleShippingFormChange("nombre_apellido", e.target.value)}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            required
+                            value={shippingFormData.email}
+                            onChange={(e) => handleShippingFormChange("email", e.target.value)}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="telefono">Teléfono / WhatsApp *</Label>
+                          <Input
+                            id="telefono"
+                            type="tel"
+                            required
+                            value={shippingFormData.telefono}
+                            onChange={(e) => handleShippingFormChange("telefono", e.target.value)}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="dni">DNI *</Label>
+                          <Input
+                            id="dni"
+                            required
+                            value={shippingFormData.dni}
+                            onChange={(e) => handleShippingFormChange("dni", e.target.value)}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="provincia">Provincia *</Label>
+                          {selectedZone === "cordoba" ? (
+                            <Input
+                              id="provincia"
+                              required
+                              value="Córdoba"
+                              disabled
+                              className="bg-muted"
+                            />
+                          ) : (
+                            <Select
+                              value={shippingFormData.provincia}
+                              onValueChange={(value) => handleShippingFormChange("provincia", value)}
+                              required
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecciona tu provincia" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {getNombreProvincias().map((prov) => (
+                                  <SelectItem key={prov} value={prov}>
+                                    {prov}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="ciudad">Ciudad / Localidad *</Label>
+                          {selectedZone === "cordoba" ? (
+                            <Input
+                              id="ciudad"
+                              required
+                              value="Córdoba"
+                              disabled
+                              className="bg-muted"
+                            />
+                          ) : (
+                            <Select
+                              value={shippingFormData.ciudad}
+                              onValueChange={(value) => handleShippingFormChange("ciudad", value)}
+                              required
+                              disabled={!shippingFormData.provincia}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={shippingFormData.provincia ? "Selecciona tu localidad" : "Primero selecciona provincia"} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {localidadesDisponibles.map((localidad) => (
+                                  <SelectItem key={localidad} value={localidad}>
+                                    {localidad}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="direccion_completa">
+                          Dirección completa (calle, número, piso/depto, código postal) *
+                        </Label>
+                        <Input
+                          id="direccion_completa"
+                          required
+                          value={shippingFormData.direccion_completa}
+                          onChange={(e) => handleShippingFormChange("direccion_completa", e.target.value)}
+                          placeholder="Ej: Av. Colón 1234, Piso 5 Dto A, CP 5000"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="comentarios">Comentarios / notas de entrega (opcional)</Label>
+                        <Textarea
+                          id="comentarios"
+                          value={shippingFormData.comentarios}
+                          onChange={(e) => handleShippingFormChange("comentarios", e.target.value)}
+                          placeholder="Información adicional sobre la entrega..."
+                          rows={3}
+                        />
+                      </div>
+
+                      <Button type="submit" className="w-full" size="lg" disabled={isProcessing}>
+                        {isProcessing ? "PROCESANDO..." : "Continuar al pago"}
+                      </Button>
+                    </form>
+                  )}
                 </DialogContent>
               </Dialog>
 

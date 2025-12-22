@@ -6,10 +6,23 @@ const PRODUCTO_ID = 1 // ID del producto Buzzy Twist
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { zona, discountCode, discountPercentage, idDescuento } = body
+    const { zona, discountCode, discountPercentage, idDescuento, shippingData } = body
 
     if (!zona || (zona !== "cba" && zona !== "interior")) {
       return NextResponse.json({ error: "Zona inválida" }, { status: 400 })
+    }
+
+    // Validate shipping data if provided
+    if (shippingData) {
+      const requiredFields = ["nombre_apellido", "email", "telefono", "dni", "provincia", "ciudad", "direccion_completa"]
+      const missingFields = requiredFields.filter(field => !shippingData[field])
+
+      if (missingFields.length > 0) {
+        return NextResponse.json(
+          { error: `Faltan campos requeridos: ${missingFields.join(", ")}` },
+          { status: 400 }
+        )
+      }
     }
 
     const supabase = await createAdminClient()
@@ -61,7 +74,8 @@ export async function POST(request: NextRequest) {
       montoOriginal,
       discountCode,
       discountPercentage,
-      idDescuento
+      idDescuento,
+      shippingData
     )
 
     if (!preference.id || !preference.init_point) {
@@ -87,6 +101,7 @@ async function createMercadoPagoPreference(
   discountCode: string | null,
   discountPercentage: number | null,
   idDescuento: number | null,
+  shippingData: any | null,
 ) {
   const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN
 
@@ -118,6 +133,7 @@ async function createMercadoPagoPreference(
     monto_final: monto,
     discount_code: discountCode || null,
     id_codigo_descuento: idDescuento || null,
+    shipping_data: shippingData || null,
   }
 
   const preferenceData = {

@@ -3,8 +3,13 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/admin/page": "app/admin/page.js",
   "/api/admin/clientes/[id]/route": "app/api/admin/clientes/[id]/route.js",
+  "/api/admin/discount-codes/[id]/route": "app/api/admin/discount-codes/[id]/route.js",
+  "/api/admin/discount-codes/route": "app/api/admin/discount-codes/route.js",
+  "/api/admin/discount-stats/route": "app/api/admin/discount-stats/route.js",
+  "/api/admin/general-stats/route": "app/api/admin/general-stats/route.js",
   "/api/admin/orders/[id]/route": "app/api/admin/orders/[id]/route.js",
   "/api/admin/orders/route": "app/api/admin/orders/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
   "/api/checkout/route": "app/api/checkout/route.js",
   "/api/get-next-serial/route": "app/api/get-next-serial/route.js",
   "/api/get-prices/route": "app/api/get-prices/route.js",
@@ -16,5 +21,6 @@
   "/checkout/failure/page": "app/checkout/failure/page.js",
   "/checkout/pending/page": "app/checkout/pending/page.js",
   "/checkout/success/page": "app/checkout/success/page.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js"
 }

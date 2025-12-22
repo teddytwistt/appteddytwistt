@@ -1,6 +1,7 @@
 {
   "version": 3,
   "pages404": true,
+  "appType": "app",
   "caseSensitive": false,
   "basePath": "",
   "redirects": [
@@ -50,6 +51,14 @@
       "namedRegex": "^/api/admin/clientes/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/admin/discount-codes/[id]",
+      "regex": "^/api/admin/discount\\-codes/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/discount\\-codes/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/admin/orders/[id]",
       "regex": "^/api/admin/orders/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -84,10 +93,34 @@
       "namedRegex": "^/admin(?:/)?$"
     },
     {
+      "page": "/api/admin/discount-codes",
+      "regex": "^/api/admin/discount\\-codes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/discount\\-codes(?:/)?$"
+    },
+    {
+      "page": "/api/admin/discount-stats",
+      "regex": "^/api/admin/discount\\-stats(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/discount\\-stats(?:/)?$"
+    },
+    {
+      "page": "/api/admin/general-stats",
+      "regex": "^/api/admin/general\\-stats(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/general\\-stats(?:/)?$"
+    },
+    {
       "page": "/api/admin/orders",
       "regex": "^/api/admin/orders(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/admin/orders(?:/)?$"
+    },
+    {
+      "page": "/api/auth/login",
+      "regex": "^/api/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/login(?:/)?$"
     },
     {
       "page": "/api/checkout",
@@ -154,6 +187,12 @@
       "regex": "^/checkout/success(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/checkout/success(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
     }
   ],
   "dataRoutes": [],
@@ -164,7 +203,6 @@
     "didPostponeHeader": "x-nextjs-postponed",
     "contentTypeHeader": "text/x-component",
     "suffix": ".rsc",
-    "prefetchSuffix": ".prefetch.rsc",
     "prefetchSegmentHeader": "next-router-segment-prefetch",
     "prefetchSegmentSuffix": ".segment.rsc",
     "prefetchSegmentDirSuffix": ".segments",
