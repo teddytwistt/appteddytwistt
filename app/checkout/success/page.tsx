@@ -23,6 +23,7 @@ function SuccessPageContent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [emailDebugInfo, setEmailDebugInfo] = useState<any>(null)
 
   // Form data
   const [formData, setFormData] = useState({
@@ -106,6 +107,8 @@ function SuccessPageContent() {
         throw new Error(data.error || "Error al enviar el formulario")
       }
 
+      // Guardar info de debug del email
+      setEmailDebugInfo(data)
       setSubmitSuccess(true)
     } catch (error) {
       console.error("[v0] Form submission error:", error)
@@ -190,6 +193,18 @@ function SuccessPageContent() {
             <p className="text-sm text-muted-foreground text-center">
               Recibirás tu Buzzy Twist en 3-5 días hábiles. ¡Gracias por tu compra!
             </p>
+
+            {/* Debug info del email */}
+            {emailDebugInfo && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-xs">
+                <p className="font-bold mb-2">Estado del Email (DEBUG):</p>
+                <p><strong>Status:</strong> {emailDebugInfo.email_status || 'no info'}</p>
+                {emailDebugInfo.email_error && (
+                  <p className="text-red-600"><strong>Error:</strong> {emailDebugInfo.email_error}</p>
+                )}
+              </div>
+            )}
+
             <Button onClick={() => router.push("/")} className="w-full">
               Volver al inicio
             </Button>
