@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
       await resend.emails.send({
         from: FROM_EMAIL,
         to: email,
-        subject: `🎉 ¡Compra Confirmada! Pedido #${String(orderData.id).padStart(4, '0')} - BUZZY × TEDDYTWIST`,
+        subject: `Compra Confirmada - Pedido #${String(orderData.id).padStart(4, '0')} - BUZZY × TEDDYTWIST`,
         html: htmlEmail,
       })
 
