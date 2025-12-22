@@ -1,8 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/server-admin"
 import { getArgentinaTimestamp } from "@/lib/utils/timezone"
+import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Verificar autenticación de administrador
+  const auth = await checkAdminAuth()
+  if (!auth.authorized) return auth.response
+
   try {
     const { id } = await params
     const body = await request.json()

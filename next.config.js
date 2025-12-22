@@ -32,9 +32,36 @@ const nextConfig = {
     ],
   },
 
-  // Headers de caché para assets estáticos
+  // Headers de caché para assets estáticos y headers de seguridad
   async headers() {
     return [
+      // Headers de seguridad para todas las páginas
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+      // Headers de caché para imágenes y videos
       {
         source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|mp4)',
         headers: [
@@ -44,6 +71,7 @@ const nextConfig = {
           },
         ],
       },
+      // Headers de caché para assets estáticos de Next.js
       {
         source: '/_next/static/:path*',
         headers: [

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Verificar autenticación de administrador
+  const auth = await checkAdminAuth()
+  if (!auth.authorized) return auth.response
+
   try {
     const supabase = await createClient()
     const { id } = await params
@@ -56,6 +61,10 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Verificar autenticación de administrador
+  const auth = await checkAdminAuth()
+  if (!auth.authorized) return auth.response
+
   try {
     const supabase = await createClient()
     const { id } = await params

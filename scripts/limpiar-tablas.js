@@ -39,22 +39,22 @@ async function limpiarTablas() {
 
     console.log('✅ Clientes eliminados exitosamente')
 
-    // 3. Resetear todas las unidades a disponible
-    console.log('📦 Reseteando unidades de producto...')
+    // 3. Resetear todas las unidades a disponible (excepto id 3)
+    console.log('📦 Reseteando unidades de producto (excepto id 3)...')
     const { error: unidadesError } = await supabase
       .from('unidades_producto')
       .update({
         estado: 'disponible',
         fecha_venta: null
       })
-      .neq('id', 0) // Actualiza todos los registros
+      .neq('id', 3) // Actualiza todos los registros EXCEPTO el id 3
 
     if (unidadesError) {
       console.error('❌ Error reseteando unidades:', unidadesError)
       throw unidadesError
     }
 
-    console.log('✅ Unidades reseteadas exitosamente')
+    console.log('✅ Unidades reseteadas exitosamente (excepto id 3)')
 
     // 4. Verificar el stock actual
     console.log('\n📊 Verificando estado del stock...')

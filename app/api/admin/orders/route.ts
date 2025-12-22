@@ -1,7 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/server-admin"
+import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function GET(request: NextRequest) {
+  // Verificar autenticación de administrador
+  const auth = await checkAdminAuth()
+  if (!auth.authorized) return auth.response
+
   try {
     const searchParams = request.nextUrl.searchParams
     const estadoPago = searchParams.get("estado_pago")

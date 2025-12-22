@@ -185,29 +185,6 @@ export function ProductSpecs({ onAdoptClick }: ProductSpecsProps) {
         </div>
       </div>
 
-      {/* YouTube Video Section */}
-      <div className="mt-12 sm:mt-24 w-full max-w-7xl mx-auto px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-cyan-500/30 rounded-2xl p-4 sm:p-8 md:p-12 space-y-4 sm:space-y-6">
-            <div className="text-center space-y-2 sm:space-y-3">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white">Ve a BUZZY en Acción</h3>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300">Descubre cómo funciona este increíble picador</p>
-            </div>
-            <div className="relative w-full max-w-sm mx-auto" style={{ paddingBottom: "177.78%", maxHeight: "70vh" }}>
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-lg"
-                src="https://www.youtube.com/embed/cYwepEKb2pE"
-                title="BUZZY × TEDDYTWIST - Video Demostración"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
       <footer className="mt-12 sm:mt-24 border-t border-zinc-800 py-8 sm:py-12">
         <div className="w-full max-w-7xl mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-3 sm:space-y-4">
