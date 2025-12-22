@@ -134,15 +134,21 @@ export async function POST(request: NextRequest) {
       console.log("[shipping] Email HTML generated successfully")
 
       // Enviar un solo email con toda la información
-      const result = await resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: `Compra Confirmada - Pedido #${String(orderData.id).padStart(4, '0')} - BUZZY × TEDDYTWIST`,
         html: htmlEmail,
       })
 
-      console.log("[shipping] Resend result:", result)
+      console.log("[shipping] Resend response - data:", data, "error:", error)
+
+      if (error) {
+        throw new Error(`Resend API error: ${JSON.stringify(error)}`)
+      }
+
       console.log("[shipping] Confirmation email sent successfully to:", email)
+      console.log("[shipping] Email ID:", data?.id)
       emailStatus = "sent"
     } catch (error) {
       console.error("[shipping] Error sending confirmation email:", error)
