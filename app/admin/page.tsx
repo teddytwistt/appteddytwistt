@@ -683,7 +683,7 @@ export default function AdminPage() {
                           variant="ghost"
                           size="sm"
                           className="h-6 w-6 p-0"
-                          onClick={() => copyToClipboard(selectedOrder.cliente.email, "Email", `email-${selectedOrder.id}`)}
+                          onClick={() => copyToClipboard(selectedOrder.cliente!.email, "Email", `email-${selectedOrder.id}`)}
                         >
                           {copiedField === `email-${selectedOrder.id}` ? (
                             <Check className="w-3 h-3 text-green-600" />
@@ -703,7 +703,7 @@ export default function AdminPage() {
                           variant="ghost"
                           size="sm"
                           className="h-6 w-6 p-0"
-                          onClick={() => copyToClipboard(selectedOrder.cliente.telefono, "Teléfono", `phone-${selectedOrder.id}`)}
+                          onClick={() => copyToClipboard(selectedOrder.cliente!.telefono, "Teléfono", `phone-${selectedOrder.id}`)}
                         >
                           {copiedField === `phone-${selectedOrder.id}` ? (
                             <Check className="w-3 h-3 text-green-600" />
@@ -734,7 +734,7 @@ export default function AdminPage() {
                             size="sm"
                             className="h-6 w-6 p-0 flex-shrink-0"
                             onClick={() => copyToClipboard(
-                              `${selectedOrder.cliente.direccion_completa}, ${selectedOrder.cliente.ciudad}, ${selectedOrder.cliente.provincia}`,
+                              `${selectedOrder.cliente!.direccion_completa}, ${selectedOrder.cliente!.ciudad}, ${selectedOrder.cliente!.provincia}`,
                               "Dirección",
                               `address-${selectedOrder.id}`
                             )}
