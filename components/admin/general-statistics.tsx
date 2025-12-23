@@ -4,7 +4,7 @@ import { useEffect, useState, forwardRef, useImperativeHandle } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, TrendingUp, MapPin, Package, CreditCard } from "lucide-react"
+import { Loader2, TrendingUp, MapPin, Package, CreditCard, ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -65,16 +65,17 @@ export interface GeneralStatisticsRef {
 export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) => {
   const [stats, setStats] = useState<GeneralStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [days, setDays] = useState<string>("30")
+  const [viewMode, setViewMode] = useState<'days' | 'weeks' | 'months' | 'years'>('days')
+  const [offset, setOffset] = useState(0)
 
   useEffect(() => {
     fetchStats()
-  }, [days])
+  }, [viewMode, offset])
 
   const fetchStats = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/admin/general-stats?days=${days}`)
+      const response = await fetch(`/api/admin/general-stats?viewMode=${viewMode}&offset=${offset}`)
       const data = await response.json()
       setStats(data)
     } catch (error) {
@@ -192,7 +193,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Pedidos</CardTitle>
@@ -225,22 +226,6 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
             <p className="text-xs text-muted-foreground">Por pedido pagado</p>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tasa de Conversión</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {stats.summary.total_orders > 0
-                ? Math.round((stats.summary.paid_orders / stats.summary.total_orders) * 100)
-                : 0}
-              %
-            </div>
-            <p className="text-xs text-muted-foreground">Pedidos completados</p>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Daily Sales Chart */}
@@ -248,23 +233,52 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <CardTitle>Ventas Últimos {days} Días</CardTitle>
-              <CardDescription>Evolución de ingresos</CardDescription>
+              <CardTitle>
+                {viewMode === 'days' && 'Ventas Diarias (7 Días)'}
+                {viewMode === 'weeks' && 'Comparación Semanal'}
+                {viewMode === 'months' && 'Comparación Mensual'}
+                {viewMode === 'years' && 'Comparación Anual'}
+              </CardTitle>
+              <CardDescription>
+                {viewMode === 'days' && 'Detalle día por día'}
+                {viewMode === 'weeks' && 'Ventas por semana'}
+                {viewMode === 'months' && 'Ventas por mes'}
+                {viewMode === 'years' && 'Ventas por año'}
+              </CardDescription>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Mostrar:</span>
-              <Select value={days} onValueChange={setDays}>
-                <SelectTrigger className="w-[140px]">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
+              <Select value={viewMode} onValueChange={(value: any) => { setViewMode(value); setOffset(0); }}>
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7">Últimos 7 días</SelectItem>
-                  <SelectItem value="15">Últimos 15 días</SelectItem>
-                  <SelectItem value="30">Últimos 30 días</SelectItem>
-                  <SelectItem value="60">Últimos 60 días</SelectItem>
-                  <SelectItem value="90">Últimos 90 días</SelectItem>
+                  <SelectItem value="days">Vista Diaria (7d)</SelectItem>
+                  <SelectItem value="weeks">Vista Semanal</SelectItem>
+                  <SelectItem value="months">Vista Mensual</SelectItem>
+                  <SelectItem value="years">Vista Anual</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setOffset(offset + 1)}
+                  className="gap-1"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Anterior
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setOffset(Math.max(0, offset - 1))}
+                  disabled={offset === 0}
+                  className="gap-1"
+                >
+                  Siguiente
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>

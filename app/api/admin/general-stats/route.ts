@@ -10,9 +10,10 @@ export async function GET(request: Request) {
   try {
     const supabase = await createClient()
 
-    // Get days parameter from query string (default to 30)
+    // Get view mode and offset from query parameters
     const { searchParams } = new URL(request.url)
-    const days = parseInt(searchParams.get("days") || "30")
+    const viewMode = searchParams.get("viewMode") || "days"
+    const offset = parseInt(searchParams.get("offset") || "0")
 
     // Fetch all orders with necessary details
     const { data: orders, error: ordersError } = await supabase
@@ -51,38 +52,21 @@ export async function GET(request: Request) {
       entregado: paidOrders.filter((o) => o.estado_envio === "entregado").length,
     }
 
-    // Calculate daily sales for the last N days
-    const now = new Date()
-    const daysAgo = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
+    // Calculate daily sales based on view mode
+    let dailySales = []
 
-    const recentPaidOrders = paidOrders.filter((o) => {
-      const orderDate = new Date(o.fecha_creacion)
-      return orderDate >= daysAgo
-    })
-
-    // Group by date
-    const salesByDate = new Map<string, { count: number; revenue: number }>()
-
-    recentPaidOrders.forEach((order) => {
-      const date = new Date(order.fecha_creacion).toISOString().split("T")[0]
-      const existing = salesByDate.get(date) || { count: 0, revenue: 0 }
-      salesByDate.set(date, {
-        count: existing.count + 1,
-        revenue: existing.revenue + order.monto_final,
-      })
-    })
-
-    // Convert to array and fill missing dates
-    const dailySales = []
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
-      const dateStr = date.toISOString().split("T")[0]
-      const stats = salesByDate.get(dateStr) || { count: 0, revenue: 0 }
-      dailySales.push({
-        date: dateStr,
-        count: stats.count,
-        revenue: stats.revenue,
-      })
+    if (viewMode === "days") {
+      // Daily view: Show last 7 days with daily detail
+      dailySales = getDailySales(paidOrders, 7, offset)
+    } else if (viewMode === "weeks") {
+      // Weekly view: Show last 8 weeks for comparison
+      dailySales = getWeeklySales(paidOrders, 8, offset)
+    } else if (viewMode === "months") {
+      // Monthly view: Show last 12 months for comparison
+      dailySales = getMonthlySales(paidOrders, 12, offset)
+    } else if (viewMode === "years") {
+      // Yearly view: Show years for comparison
+      dailySales = getYearlySales(paidOrders, 5, offset)
     }
 
     return NextResponse.json({
@@ -114,4 +98,162 @@ export async function GET(request: Request) {
     console.error("[admin] Unexpected error:", error)
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
   }
+}
+
+function getDailySales(paidOrders: any[], days: number, offset: number) {
+  const now = new Date()
+  now.setHours(23, 59, 59, 999) // End of today
+
+  // Calculate the start date based on offset
+  const offsetDays = offset * days
+  const endDate = new Date(now.getTime() - offsetDays * 24 * 60 * 60 * 1000)
+  const startDate = new Date(endDate.getTime() - (days - 1) * 24 * 60 * 60 * 1000)
+  startDate.setHours(0, 0, 0, 0)
+
+  // Filter orders in this range
+  const relevantOrders = paidOrders.filter((o) => {
+    const orderDate = new Date(o.fecha_creacion)
+    return orderDate >= startDate && orderDate <= endDate
+  })
+
+  // Group by date
+  const salesByDate = new Map<string, { count: number; revenue: number }>()
+  relevantOrders.forEach((order) => {
+    const date = new Date(order.fecha_creacion).toISOString().split("T")[0]
+    const existing = salesByDate.get(date) || { count: 0, revenue: 0 }
+    salesByDate.set(date, {
+      count: existing.count + 1,
+      revenue: existing.revenue + order.monto_final,
+    })
+  })
+
+  // Create array with all days
+  const result = []
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(endDate.getTime() - i * 24 * 60 * 60 * 1000)
+    const dateStr = date.toISOString().split("T")[0]
+    const stats = salesByDate.get(dateStr) || { count: 0, revenue: 0 }
+    result.push({
+      date: dateStr,
+      count: stats.count,
+      revenue: stats.revenue,
+    })
+  }
+
+  return result
+}
+
+function getWeeklySales(paidOrders: any[], weeks: number, offset: number) {
+  const now = new Date()
+  now.setHours(23, 59, 59, 999)
+
+  // Get current week start (Monday)
+  const currentWeekStart = new Date(now)
+  currentWeekStart.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1))
+  currentWeekStart.setHours(0, 0, 0, 0)
+
+  const result = []
+
+  for (let i = 0; i < weeks; i++) {
+    const weekOffset = i + (offset * weeks)
+    const weekStart = new Date(currentWeekStart)
+    weekStart.setDate(currentWeekStart.getDate() - (weekOffset * 7))
+
+    const weekEnd = new Date(weekStart)
+    weekEnd.setDate(weekStart.getDate() + 6)
+    weekEnd.setHours(23, 59, 59, 999)
+
+    // Filter orders in this week
+    const weekOrders = paidOrders.filter((o) => {
+      const orderDate = new Date(o.fecha_creacion)
+      return orderDate >= weekStart && orderDate <= weekEnd
+    })
+
+    const revenue = weekOrders.reduce((sum, o) => sum + o.monto_final, 0)
+
+    result.unshift({
+      date: `Sem ${formatWeekLabel(weekStart)}`,
+      count: weekOrders.length,
+      revenue: revenue,
+    })
+  }
+
+  return result
+}
+
+function getMonthlySales(paidOrders: any[], months: number, offset: number) {
+  const now = new Date()
+  const result = []
+
+  for (let i = 0; i < months; i++) {
+    const monthOffset = i + (offset * months)
+    const targetDate = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1)
+
+    const monthStart = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1)
+    monthStart.setHours(0, 0, 0, 0)
+
+    const monthEnd = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
+    monthEnd.setHours(23, 59, 59, 999)
+
+    // Filter orders in this month
+    const monthOrders = paidOrders.filter((o) => {
+      const orderDate = new Date(o.fecha_creacion)
+      return orderDate >= monthStart && orderDate <= monthEnd
+    })
+
+    const revenue = monthOrders.reduce((sum, o) => sum + o.monto_final, 0)
+
+    result.unshift({
+      date: formatMonthLabel(monthStart),
+      count: monthOrders.length,
+      revenue: revenue,
+    })
+  }
+
+  return result
+}
+
+function getYearlySales(paidOrders: any[], years: number, offset: number) {
+  const now = new Date()
+  const currentYear = now.getFullYear()
+  const result = []
+
+  for (let i = 0; i < years; i++) {
+    const yearOffset = i + (offset * years)
+    const targetYear = currentYear - yearOffset
+
+    const yearStart = new Date(targetYear, 0, 1)
+    yearStart.setHours(0, 0, 0, 0)
+
+    const yearEnd = new Date(targetYear, 11, 31)
+    yearEnd.setHours(23, 59, 59, 999)
+
+    // Filter orders in this year
+    const yearOrders = paidOrders.filter((o) => {
+      const orderDate = new Date(o.fecha_creacion)
+      return orderDate >= yearStart && orderDate <= yearEnd
+    })
+
+    const revenue = yearOrders.reduce((sum, o) => sum + o.monto_final, 0)
+
+    result.unshift({
+      date: targetYear.toString(),
+      count: yearOrders.length,
+      revenue: revenue,
+    })
+  }
+
+  return result
+}
+
+function formatWeekLabel(date: Date): string {
+  const day = date.getDate().toString().padStart(2, '0')
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  return `${day}/${month}`
+}
+
+function formatMonthLabel(date: Date): string {
+  const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+  const year = date.getFullYear().toString().substring(2)
+  return `${monthNames[date.getMonth()]} ${year}`
 }
