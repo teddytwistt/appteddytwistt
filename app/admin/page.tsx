@@ -276,16 +276,11 @@ export default function AdminPage() {
         <div className="flex gap-2 border-b border-border overflow-x-auto">
           <Button
             variant={activeTab === "orders" ? "default" : "ghost"}
-            className="gap-2 whitespace-nowrap relative"
+            className="gap-2 whitespace-nowrap"
             onClick={() => setActiveTab("orders")}
           >
             <ShoppingBag className="w-4 h-4" />
             Pedidos
-            {pedidosPendientes > 0 && (
-              <Badge variant="destructive" className="ml-1 h-5 min-w-5 px-1 text-xs">
-                {pedidosPendientes}
-              </Badge>
-            )}
           </Button>
           <Button
             variant={activeTab === "general-stats" ? "default" : "ghost"}
