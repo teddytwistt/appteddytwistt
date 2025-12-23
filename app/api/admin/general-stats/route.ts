@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     }
 
     // Calculate daily sales based on view mode
-    let dailySales = []
+    let dailySales: Array<{ date: string; count: number; revenue: number }> = []
 
     if (viewMode === "days") {
       // Daily view: Show last 7 days with daily detail
