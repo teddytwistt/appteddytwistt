@@ -16,8 +16,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut, BarChart3 } from "lucide-react"
+import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut, BarChart3, Copy, Check } from "lucide-react"
 import { Tooltip as InfoTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { useToast } from "@/hooks/use-toast"
 import type { PedidoCompleto, StockStatus, Cliente } from "@/lib/types"
 import { formatArgentinaDateTime } from "@/lib/utils/timezone"
 import { DiscountStatistics, type DiscountStatisticsRef } from "@/components/admin/discount-statistics"
@@ -27,12 +28,15 @@ type TabType = "orders" | "discount-stats" | "general-stats"
 
 export default function AdminPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [orders, setOrders] = useState<PedidoCompleto[]>([])
   const [filteredOrders, setFilteredOrders] = useState<PedidoCompleto[]>([])
   const [stockStatus, setStockStatus] = useState<StockStatus | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [estadoEnvioFilter, setEstadoEnvioFilter] = useState<string>("all")
   const [zonaFilter, setZonaFilter] = useState<string>("all")
+  const [copiedField, setCopiedField] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
   // Estado para tabs
   const [activeTab, setActiveTab] = useState<TabType>("orders")
@@ -104,11 +108,28 @@ export default function AdminPage() {
 
       setOrders(ordersData.orders || [])
       setStockStatus(stockData)
+      setLastUpdated(new Date())
     } catch (error) {
       console.error("[admin] Error fetching admin data:", error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const getTimeAgo = (date: Date) => {
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+    if (seconds < 60) return "hace un momento"
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `hace ${minutes} min`
+    const hours = Math.floor(minutes / 60)
+    return `hace ${hours}h`
+  }
+
+  const isUrgentOrder = (order: PedidoCompleto) => {
+    if (order.estado_pago !== "pagado" || order.estado_envio !== "pendiente") return false
+    const orderDate = new Date(order.fecha_pago || order.fecha_creacion)
+    const hoursSincePaid = (new Date().getTime() - orderDate.getTime()) / (1000 * 60 * 60)
+    return hoursSincePaid > 48
   }
 
   const applyFilters = () => {
@@ -167,6 +188,26 @@ export default function AdminPage() {
     return formatArgentinaDateTime(dateString)
   }
 
+  const copyToClipboard = async (text: string, fieldName: string, fieldId: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedField(fieldId)
+      toast({
+        title: "Copiado",
+        description: `${fieldName} copiado al portapapeles`,
+        duration: 2000,
+      })
+      setTimeout(() => setCopiedField(null), 2000)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo copiar al portapapeles",
+        variant: "destructive",
+        duration: 2000,
+      })
+    }
+  }
+
   const getEstadoPagoBadge = (estado: string) => {
     const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; icon: any }> = {
       pagado: { variant: "default", icon: CheckCircle },
@@ -210,7 +251,14 @@ export default function AdminPage() {
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-black">Panel Administrativo</h1>
-            <p className="text-muted-foreground">Gestión de pedidos Buzzy Twist</p>
+            <div className="flex items-center gap-3">
+              <p className="text-muted-foreground">Gestión de pedidos Buzzy Twist</p>
+              {lastUpdated && (
+                <span className="text-xs text-muted-foreground/70 flex items-center gap-1">
+                  • Actualizado {getTimeAgo(lastUpdated)}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex gap-2">
@@ -228,11 +276,16 @@ export default function AdminPage() {
         <div className="flex gap-2 border-b border-border overflow-x-auto">
           <Button
             variant={activeTab === "orders" ? "default" : "ghost"}
-            className="gap-2 whitespace-nowrap"
+            className="gap-2 whitespace-nowrap relative"
             onClick={() => setActiveTab("orders")}
           >
             <ShoppingBag className="w-4 h-4" />
             Pedidos
+            {pedidosPendientes > 0 && (
+              <Badge variant="destructive" className="ml-1 h-5 min-w-5 px-1 text-xs">
+                {pedidosPendientes}
+              </Badge>
+            )}
           </Button>
           <Button
             variant={activeTab === "general-stats" ? "default" : "ghost"}
@@ -427,7 +480,10 @@ export default function AdminPage() {
                     </TableRow>
                   ) : (
                     paginatedOrders.map((order) => (
-                      <TableRow key={order.id}>
+                      <TableRow
+                        key={order.id}
+                        className={isUrgentOrder(order) ? "bg-amber-50/30 dark:bg-amber-950/10 border-l-2 border-l-amber-500" : ""}
+                      >
                         <TableCell className="font-mono text-xs">
                           #{order.id}
                         </TableCell>
@@ -621,13 +677,41 @@ export default function AdminPage() {
                       <p className="text-muted-foreground flex items-center gap-2">
                         <Mail className="w-3 h-3" /> Email
                       </p>
-                      <p>{selectedOrder.cliente.email}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="flex-1">{selectedOrder.cliente.email}</p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => copyToClipboard(selectedOrder.cliente.email, "Email", `email-${selectedOrder.id}`)}
+                        >
+                          {copiedField === `email-${selectedOrder.id}` ? (
+                            <Check className="w-3 h-3 text-green-600" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                     <div>
                       <p className="text-muted-foreground flex items-center gap-2">
                         <Phone className="w-3 h-3" /> Teléfono
                       </p>
-                      <p>{selectedOrder.cliente.telefono}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="flex-1">{selectedOrder.cliente.telefono}</p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => copyToClipboard(selectedOrder.cliente.telefono, "Teléfono", `phone-${selectedOrder.id}`)}
+                        >
+                          {copiedField === `phone-${selectedOrder.id}` ? (
+                            <Check className="w-3 h-3 text-green-600" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                     <div>
                       <p className="text-muted-foreground">DNI</p>
@@ -638,10 +722,30 @@ export default function AdminPage() {
                         <p className="text-muted-foreground flex items-center gap-2">
                           <MapPin className="w-3 h-3" /> Dirección
                         </p>
-                        <p>{selectedOrder.cliente.direccion_completa}</p>
-                        <p className="text-muted-foreground text-xs mt-1">
-                          {selectedOrder.cliente.ciudad}, {selectedOrder.cliente.provincia}
-                        </p>
+                        <div className="flex items-start gap-2">
+                          <div className="flex-1">
+                            <p>{selectedOrder.cliente.direccion_completa}</p>
+                            <p className="text-muted-foreground text-xs mt-1">
+                              {selectedOrder.cliente.ciudad}, {selectedOrder.cliente.provincia}
+                            </p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0 flex-shrink-0"
+                            onClick={() => copyToClipboard(
+                              `${selectedOrder.cliente.direccion_completa}, ${selectedOrder.cliente.ciudad}, ${selectedOrder.cliente.provincia}`,
+                              "Dirección",
+                              `address-${selectedOrder.id}`
+                            )}
+                          >
+                            {copiedField === `address-${selectedOrder.id}` ? (
+                              <Check className="w-3 h-3 text-green-600" />
+                            ) : (
+                              <Copy className="w-3 h-3" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </div>
