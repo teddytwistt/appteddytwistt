@@ -4,7 +4,8 @@ import { useEffect, useState, forwardRef, useImperativeHandle } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, TrendingUp, MapPin, Package, CreditCard, ChevronLeft, ChevronRight } from "lucide-react"
+import { Loader2, TrendingUp, MapPin, Package, CreditCard, ChevronLeft, ChevronRight, Info } from "lucide-react"
+import { Tooltip as InfoTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -227,38 +228,68 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pedidos</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.summary.total_orders}</div>
-            <p className="text-xs text-muted-foreground">{stats.summary.paid_orders} pagados</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Total Pedidos
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <Package className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.summary.total_orders}</div>
+                <p className="text-xs text-muted-foreground">{stats.summary.paid_orders} pagados</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Cantidad total de pedidos recibidos, incluyendo pagados, pendientes y fallidos</p>
+          </TooltipContent>
+        </InfoTooltip>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.summary.total_revenue.toLocaleString("es-AR")}</div>
-            <p className="text-xs text-muted-foreground">De pedidos pagados</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Ingresos Totales
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${stats.summary.total_revenue.toLocaleString("es-AR")}</div>
+                <p className="text-xs text-muted-foreground">De pedidos pagados</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Suma total de ingresos generados por todos los pedidos pagados</p>
+          </TooltipContent>
+        </InfoTooltip>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ticket Promedio</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(stats.summary.average_order_value).toLocaleString("es-AR")}</div>
-            <p className="text-xs text-muted-foreground">Por pedido pagado</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Ticket Promedio
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <CreditCard className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${Math.round(stats.summary.average_order_value).toLocaleString("es-AR")}</div>
+                <p className="text-xs text-muted-foreground">Por pedido pagado</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Valor promedio de cada pedido pagado (ingresos totales ÷ pedidos pagados)</p>
+          </TooltipContent>
+        </InfoTooltip>
       </div>
 
       {/* Daily Sales Chart */}

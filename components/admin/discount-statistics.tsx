@@ -16,7 +16,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Loader2, TrendingUp, BarChart3, Tag, DollarSign, Plus, Search, Trash2 } from "lucide-react"
+import { Loader2, TrendingUp, BarChart3, Tag, DollarSign, Plus, Search, Trash2, Info } from "lucide-react"
+import { Tooltip as InfoTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js"
 import { Line } from "react-chartjs-2"
 
@@ -325,67 +326,117 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Códigos</CardTitle>
-            <Tag className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.summary.total_codes}</div>
-            <p className="text-xs text-muted-foreground">{stats.summary.active_codes} activos</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Total Códigos
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <Tag className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.summary.total_codes}</div>
+                <p className="text-xs text-muted-foreground">{stats.summary.active_codes} activos</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Cantidad total de códigos de descuento creados, incluyendo activos e inactivos</p>
+          </TooltipContent>
+        </InfoTooltip>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Usos Exitosos</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.summary.total_successful_uses}</div>
-            <p className="text-xs text-muted-foreground">Pedidos pagados</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Usos Exitosos
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.summary.total_successful_uses}</div>
+                <p className="text-xs text-muted-foreground">Pedidos pagados</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Número total de veces que los códigos fueron usados en pedidos que se pagaron exitosamente</p>
+          </TooltipContent>
+        </InfoTooltip>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos con Descuento</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.summary.total_revenue_with_discounts.toLocaleString("es-AR")}</div>
-            <p className="text-xs text-muted-foreground">Total generado</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Ingresos con Descuento
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${stats.summary.total_revenue_with_discounts.toLocaleString("es-AR")}</div>
+                <p className="text-xs text-muted-foreground">Total generado</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Ingresos totales generados por pedidos que utilizaron códigos de descuento (ya descontado)</p>
+          </TooltipContent>
+        </InfoTooltip>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Descuento Otorgado</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.summary.total_discount_given.toLocaleString("es-AR")}</div>
-            <p className="text-xs text-muted-foreground">Total descontado</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Descuento Otorgado
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${stats.summary.total_discount_given.toLocaleString("es-AR")}</div>
+                <p className="text-xs text-muted-foreground">Total descontado</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Monto total que se dejó de percibir por aplicar descuentos en pedidos pagados</p>
+          </TooltipContent>
+        </InfoTooltip>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Promedio por Pedido</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              $
-              {stats.summary.total_successful_uses > 0
-                ? Math.round(stats.summary.total_revenue_with_discounts / stats.summary.total_successful_uses).toLocaleString(
-                    "es-AR",
-                  )
-                : 0}
-            </div>
-            <p className="text-xs text-muted-foreground">Valor promedio</p>
-          </CardContent>
-        </Card>
+        <InfoTooltip>
+          <TooltipTrigger asChild>
+            <Card className="cursor-help transition-shadow hover:shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-1">
+                  Promedio por Pedido
+                  <Info className="h-3 w-3 text-muted-foreground" />
+                </CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  $
+                  {stats.summary.total_successful_uses > 0
+                    ? Math.round(stats.summary.total_revenue_with_discounts / stats.summary.total_successful_uses).toLocaleString(
+                        "es-AR",
+                      )
+                    : 0}
+                </div>
+                <p className="text-xs text-muted-foreground">Valor promedio</p>
+              </CardContent>
+            </Card>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Valor promedio de pedidos con descuento (ingresos con descuento ÷ usos exitosos)</p>
+          </TooltipContent>
+        </InfoTooltip>
       </div>
 
       {/* Charts */}
