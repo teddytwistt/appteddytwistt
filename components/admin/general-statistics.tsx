@@ -230,12 +230,9 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
       <div className="grid gap-4 md:grid-cols-3">
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Total Pedidos
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Total Pedidos</CardTitle>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -244,19 +241,16 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Cantidad total de pedidos recibidos, incluyendo pagados, pendientes y fallidos</p>
           </TooltipContent>
         </InfoTooltip>
 
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Ingresos Totales
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -265,19 +259,16 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Suma total de ingresos generados por todos los pedidos pagados</p>
           </TooltipContent>
         </InfoTooltip>
 
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Ticket Promedio
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Ticket Promedio</CardTitle>
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -286,7 +277,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Valor promedio de cada pedido pagado (ingresos totales ÷ pedidos pagados)</p>
           </TooltipContent>
         </InfoTooltip>

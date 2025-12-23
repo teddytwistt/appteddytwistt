@@ -328,12 +328,9 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Total Códigos
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Total Códigos</CardTitle>
                 <Tag className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -342,19 +339,16 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Cantidad total de códigos de descuento creados, incluyendo activos e inactivos</p>
           </TooltipContent>
         </InfoTooltip>
 
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Usos Exitosos
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Usos Exitosos</CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -363,19 +357,16 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Número total de veces que los códigos fueron usados en pedidos que se pagaron exitosamente</p>
           </TooltipContent>
         </InfoTooltip>
 
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Ingresos con Descuento
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Ingresos con Descuento</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -384,19 +375,16 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Ingresos totales generados por pedidos que utilizaron códigos de descuento (ya descontado)</p>
           </TooltipContent>
         </InfoTooltip>
 
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Descuento Otorgado
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Descuento Otorgado</CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -405,19 +393,16 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Monto total que se dejó de percibir por aplicar descuentos en pedidos pagados</p>
           </TooltipContent>
         </InfoTooltip>
 
         <InfoTooltip>
           <TooltipTrigger asChild>
-            <Card className="cursor-help transition-shadow hover:shadow-md">
+            <Card className="transition-all hover:border-primary/50">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-1">
-                  Promedio por Pedido
-                  <Info className="h-3 w-3 text-muted-foreground" />
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Promedio por Pedido</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -433,7 +418,7 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
               </CardContent>
             </Card>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom" className="max-w-[250px]">
             <p>Valor promedio de pedidos con descuento (ingresos con descuento ÷ usos exitosos)</p>
           </TooltipContent>
         </InfoTooltip>

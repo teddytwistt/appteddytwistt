@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Loader2, Package, TrendingUp, Clock, CheckCircle, XCircle, Search, User, Phone, Mail, MapPin, FileText, ShoppingBag, LogOut, BarChart3 } from "lucide-react"
+import { Tooltip as InfoTooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { PedidoCompleto, StockStatus, Cliente } from "@/lib/types"
 import { formatArgentinaDateTime } from "@/lib/utils/timezone"
 import { DiscountStatistics, type DiscountStatisticsRef } from "@/components/admin/discount-statistics"
@@ -256,51 +257,79 @@ export default function AdminPage() {
           <>
             {/* Stats Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Stock Disponible</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stockStatus?.disponibles || 0}</div>
-              <p className="text-xs text-muted-foreground">de {stockStatus?.stock_inicial || 900} unidades</p>
-            </CardContent>
-          </Card>
+          <InfoTooltip>
+            <TooltipTrigger asChild>
+              <Card className="transition-all hover:border-primary/50">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Stock Disponible</CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stockStatus?.disponibles || 0}</div>
+                  <p className="text-xs text-muted-foreground">de {stockStatus?.stock_inicial || 900} unidades</p>
+                </CardContent>
+              </Card>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-[250px]">
+              <p>Cantidad de unidades disponibles para vender del stock inicial configurado</p>
+            </TooltipContent>
+          </InfoTooltip>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Unidades Vendidas</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stockStatus?.vendidos || 0}</div>
-              <p className="text-xs text-muted-foreground">
-                {stockStatus ? Math.round((stockStatus.vendidos / stockStatus.stock_inicial) * 100) : 0}% del total
-              </p>
-            </CardContent>
-          </Card>
+          <InfoTooltip>
+            <TooltipTrigger asChild>
+              <Card className="transition-all hover:border-primary/50">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Unidades Vendidas</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stockStatus?.vendidos || 0}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {stockStatus ? Math.round((stockStatus.vendidos / stockStatus.stock_inicial) * 100) : 0}% del total
+                  </p>
+                </CardContent>
+              </Card>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-[250px]">
+              <p>Número total de unidades que fueron vendidas y asignadas a pedidos pagados</p>
+            </TooltipContent>
+          </InfoTooltip>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Ventas Totales</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">${totalVentas.toLocaleString("es-AR")}</div>
-              <p className="text-xs text-muted-foreground">Pagos aprobados</p>
-            </CardContent>
-          </Card>
+          <InfoTooltip>
+            <TooltipTrigger asChild>
+              <Card className="transition-all hover:border-primary/50">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Ventas Totales</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">${totalVentas.toLocaleString("es-AR")}</div>
+                  <p className="text-xs text-muted-foreground">Pagos aprobados</p>
+                </CardContent>
+              </Card>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-[250px]">
+              <p>Suma del monto final de todos los pedidos con pago aprobado exitosamente</p>
+            </TooltipContent>
+          </InfoTooltip>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Envíos Pendientes</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{pedidosPendientes}</div>
-              <p className="text-xs text-muted-foreground">Por despachar</p>
-            </CardContent>
-          </Card>
+          <InfoTooltip>
+            <TooltipTrigger asChild>
+              <Card className="transition-all hover:border-primary/50">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Envíos Pendientes</CardTitle>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{pedidosPendientes}</div>
+                  <p className="text-xs text-muted-foreground">Por despachar</p>
+                </CardContent>
+              </Card>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-[250px]">
+              <p>Pedidos pagados que aún no han sido marcados como enviados</p>
+            </TooltipContent>
+          </InfoTooltip>
         </div>
 
         {/* Filters and Orders Table */}
