@@ -102,19 +102,27 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
     return <div className="text-center py-12 text-muted-foreground">Error al cargar estadísticas</div>
   }
 
-  // Chart data
+  // Chart data - format labels based on view mode
   const dailySalesChartData = {
     labels: stats.daily_sales.map((sale) => {
-      const date = new Date(sale.date)
-      return `${date.getDate()}/${date.getMonth() + 1}`
+      if (viewMode === 'days') {
+        // For daily view, format the date nicely
+        const date = new Date(sale.date)
+        const day = date.getDate()
+        const month = date.getMonth() + 1
+        return `${day}/${month}`
+      } else {
+        // For weeks, months, years - use the pre-formatted label from backend
+        return sale.date
+      }
     }),
     datasets: [
       {
         label: "Ingresos ($)",
         data: stats.daily_sales.map((sale) => sale.revenue),
+        backgroundColor: "rgba(6, 182, 212, 0.8)",
         borderColor: "rgba(6, 182, 212, 1)",
-        backgroundColor: "rgba(6, 182, 212, 0.1)",
-        tension: 0.4,
+        borderWidth: 1,
       },
     ],
   }
@@ -155,7 +163,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
     ],
   }
 
-  const lineChartOptions = {
+  const barChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
@@ -166,15 +174,40 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
       legend: {
         display: false,
       },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              label += '$' + context.parsed.y.toLocaleString('es-AR');
+            }
+            return label;
+          }
+        }
+      }
     },
     scales: {
       y: {
         type: "linear" as const,
         display: true,
         position: "left" as const,
+        beginAtZero: true,
         title: {
           display: true,
           text: "Ingresos ($)",
+        },
+        ticks: {
+          callback: function(value: any) {
+            return '$' + value.toLocaleString('es-AR');
+          }
+        }
+      },
+      x: {
+        grid: {
+          display: false,
         },
       },
     },
@@ -284,7 +317,7 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
         </CardHeader>
         <CardContent>
           <div className="h-[350px]">
-            <Line data={dailySalesChartData} options={lineChartOptions} />
+            <Bar data={dailySalesChartData} options={barChartOptions} />
           </div>
         </CardContent>
       </Card>
