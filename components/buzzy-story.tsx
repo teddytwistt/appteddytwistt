@@ -31,7 +31,7 @@ export function BuzzyStory() {
 
                 <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed text-pretty">
                   <span className="text-primary font-bold">BUZZY</span> está listo para una nueva historia a tu lado… y
-                  para demostrar su fuerza como picador.
+                  para demostrar su fuerza como Grinder.
                 </p>
               </div>
 

@@ -14,10 +14,10 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "BUZZY × TEDDYTWIST - Edición Limitada",
-  description: "Figura de colección edición limitada 001/900. Picador de cannabis premium con diseño exclusivo de TeddyTwist. Solo 900 unidades disponibles.",
+  description: "Figura de colección edición limitada 001/900. Grinder de cannabis premium con diseño exclusivo de TeddyTwist. Solo 900 unidades disponibles.",
   generator: "v0.app",
   metadataBase: new URL("https://www.teddytwist.com"),
-  keywords: ["BUZZY", "TeddyTwist", "picador", "grinder", "cannabis", "edición limitada", "colección"],
+  keywords: ["BUZZY", "TeddyTwist", "grinder", "cannabis", "edición limitada", "colección"],
   authors: [{ name: "TeddyTwist" }],
   creator: "TeddyTwist",
   publisher: "TeddyTwist",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     locale: "es_AR",
     url: "https://www.teddytwist.com",
     title: "BUZZY × TEDDYTWIST - Edición Limitada",
-    description: "Figura de colección edición limitada 001/900. Picador de cannabis premium con diseño exclusivo.",
+    description: "Figura de colección edición limitada 001/900. Grinder de cannabis premium con diseño exclusivo.",
     siteName: "TeddyTwist",
     images: [
       {

@@ -24,7 +24,7 @@ export function ProductGallery() {
               EDICIÓN LIMITADA
             </h2>
             <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-              Cada picador es una pieza única numerada y producida a baja escala
+              Cada Grinder es una pieza única numerada y producida a baja escala
             </p>
           </div>
 

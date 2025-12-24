@@ -42,7 +42,7 @@ function ProductSpecs({ onAdoptClick }) {
             })["ProductSpecs.useEffect"];
         }
     }["ProductSpecs.useEffect"], []);
-    // Mouse effect for desktop
+    // Mouse effect for desktop - multi-layer parallax
     const handleMouseMove = (e)=>{
         if (isMobile) return; // Don't use mouse effect on mobile
         if (!imageRef.current) return;
@@ -67,6 +67,29 @@ function ProductSpecs({ onAdoptClick }) {
             scale: 1
         });
     };
+    // Layer configurations for parallax effect
+    const layers = [
+        {
+            src: "/images/01.png",
+            depth: 0.3,
+            animation: "float-layer-1"
+        },
+        {
+            src: "/images/02.png",
+            depth: 0.5,
+            animation: "float-layer-2"
+        },
+        {
+            src: "/images/03.png",
+            depth: 0.7,
+            animation: "float-layer-3"
+        },
+        {
+            src: "/images/04.png",
+            depth: 0.9,
+            animation: "float-layer-4"
+        }
+    ];
     const specs = [
         {
             label: "Material",
@@ -109,7 +132,7 @@ function ProductSpecs({ onAdoptClick }) {
                                     children: "Especificaciones"
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 65,
+                                    lineNumber: 73,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -117,13 +140,13 @@ function ProductSpecs({ onAdoptClick }) {
                                     children: "Diseñado y fabricado con los más altos estándares de calidad."
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 66,
+                                    lineNumber: 74,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/product-specs.tsx",
-                            lineNumber: 64,
+                            lineNumber: 72,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -139,7 +162,7 @@ function ProductSpecs({ onAdoptClick }) {
                                                     children: spec.label
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-specs.tsx",
-                                                    lineNumber: 78,
+                                                    lineNumber: 86,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -147,18 +170,18 @@ function ProductSpecs({ onAdoptClick }) {
                                                     children: spec.value
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-specs.tsx",
-                                                    lineNumber: 79,
+                                                    lineNumber: 87,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, index, true, {
                                             fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 74,
+                                            lineNumber: 82,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 72,
+                                    lineNumber: 80,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -167,43 +190,50 @@ function ProductSpecs({ onAdoptClick }) {
                                         ref: imageRef,
                                         onMouseMove: handleMouseMove,
                                         onMouseLeave: handleMouseLeave,
-                                        className: isMobile ? "animate-float-gentle" : "cursor-pointer",
-                                        style: isMobile ? {
-                                            transformStyle: "preserve-3d"
-                                        } : {
-                                            transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${transform.scale})`,
-                                            transition: "transform 0.2s ease-out",
+                                        className: "cursor-pointer relative w-full max-w-[280px] sm:max-w-sm md:max-w-md",
+                                        style: {
+                                            height: "500px",
                                             transformStyle: "preserve-3d"
                                         },
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                            src: "/images/recurso-207depiece.webp",
-                                            alt: "Despiece del producto TeddyTwist mostrando componentes",
-                                            className: "w-full max-w-[280px] sm:max-w-sm md:max-w-md h-auto object-contain select-none",
-                                            draggable: "false",
-                                            loading: "lazy",
-                                            style: {
-                                                filter: `drop-shadow(0 ${isMobile || transform.scale === 1.05 ? "30px" : "20px"} ${isMobile || transform.scale === 1.05 ? "40px" : "30px"} rgba(6, 182, 212, ${isMobile || transform.scale === 1.05 ? "0.4" : "0.2"}))`,
-                                                transition: "filter 0.2s ease-out"
-                                            }
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 102,
-                                            columnNumber: 17
-                                        }, this)
+                                        children: layers.map((layer, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: `absolute inset-0 w-full h-full ${layer.animation}`,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                    src: layer.src,
+                                                    alt: `Pieza ${index + 1} del despiece TeddyTwist`,
+                                                    className: "absolute inset-0 w-full h-full object-contain select-none",
+                                                    draggable: "false",
+                                                    loading: "lazy",
+                                                    style: isMobile ? {
+                                                        filter: `drop-shadow(0 20px 30px rgba(6, 182, 212, ${0.3 - index * 0.05}))`
+                                                    } : {
+                                                        transform: `perspective(1000px) rotateX(${transform.rotateX * layer.depth}deg) rotateY(${transform.rotateY * layer.depth}deg) scale(${1 + (transform.scale - 1) * layer.depth}) translateZ(${index * 20}px)`,
+                                                        transition: "transform 0.2s ease-out",
+                                                        filter: `drop-shadow(0 ${transform.scale === 1.05 ? 30 + index * 5 : 20 + index * 3}px ${transform.scale === 1.05 ? 40 + index * 5 : 30 + index * 3}px rgba(6, 182, 212, ${transform.scale === 1.05 ? 0.4 - index * 0.05 : 0.2 - index * 0.03}))`
+                                                    }
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/product-specs.tsx",
+                                                    lineNumber: 108,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, index, false, {
+                                                fileName: "[project]/components/product-specs.tsx",
+                                                lineNumber: 104,
+                                                columnNumber: 19
+                                            }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-specs.tsx",
-                                        lineNumber: 85,
+                                        lineNumber: 93,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 84,
+                                    lineNumber: 92,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/product-specs.tsx",
-                            lineNumber: 71,
+                            lineNumber: 79,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -217,7 +247,7 @@ function ProductSpecs({ onAdoptClick }) {
                                             children: "Solo 900 Unidades"
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 119,
+                                            lineNumber: 134,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -225,13 +255,13 @@ function ProductSpecs({ onAdoptClick }) {
                                             children: "Esta es tu oportunidad de poseer una pieza única de arte coleccionable. Una vez vendidas, nunca volverán a estar disponibles."
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 120,
+                                            lineNumber: 135,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 118,
+                                    lineNumber: 133,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -244,7 +274,7 @@ function ProductSpecs({ onAdoptClick }) {
                                             children: "ADOPTAR A BUZZY"
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 127,
+                                            lineNumber: 142,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -252,7 +282,7 @@ function ProductSpecs({ onAdoptClick }) {
                                             children: "Envío gratuito dentro de Córdoba capital • Garantía de un mes"
                                         }, void 0, false, {
                                             fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 135,
+                                            lineNumber: 150,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -272,19 +302,19 @@ function ProductSpecs({ onAdoptClick }) {
                                                                 className: "w-4 h-4 sm:w-5 sm:h-5"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/product-specs.tsx",
-                                                                lineNumber: 147,
+                                                                lineNumber: 162,
                                                                 columnNumber: 21
                                                             }, this),
                                                             "Síguenos en Instagram"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/product-specs.tsx",
-                                                        lineNumber: 146,
+                                                        lineNumber: 161,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-specs.tsx",
-                                                    lineNumber: 140,
+                                                    lineNumber: 155,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -301,120 +331,48 @@ function ProductSpecs({ onAdoptClick }) {
                                                                 className: "w-4 h-4 sm:w-5 sm:h-5"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/product-specs.tsx",
-                                                                lineNumber: 163,
+                                                                lineNumber: 178,
                                                                 columnNumber: 21
                                                             }, this),
                                                             "Consultas"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/product-specs.tsx",
-                                                        lineNumber: 158,
+                                                        lineNumber: 173,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/product-specs.tsx",
-                                                    lineNumber: 152,
+                                                    lineNumber: 167,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/product-specs.tsx",
-                                            lineNumber: 139,
+                                            lineNumber: 154,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 126,
+                                    lineNumber: 141,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/product-specs.tsx",
-                            lineNumber: 117,
+                            lineNumber: 132,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/product-specs.tsx",
-                    lineNumber: 63,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/product-specs.tsx",
-                lineNumber: 62,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mt-12 sm:mt-24 w-full max-w-7xl mx-auto px-4",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "max-w-2xl mx-auto",
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-cyan-500/30 rounded-2xl p-4 sm:p-8 md:p-12 space-y-4 sm:space-y-6",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-center space-y-2 sm:space-y-3",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                        className: "text-2xl sm:text-3xl md:text-4xl font-black text-white",
-                                        children: "Ve a BUZZY en Acción"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/product-specs.tsx",
-                                        lineNumber: 178,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-sm sm:text-base md:text-lg text-gray-300",
-                                        children: "Descubre cómo funciona este increíble picador"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/product-specs.tsx",
-                                        lineNumber: 179,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/components/product-specs.tsx",
-                                lineNumber: 177,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "relative w-full max-w-sm mx-auto",
-                                style: {
-                                    paddingBottom: "177.78%",
-                                    maxHeight: "70vh"
-                                },
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("iframe", {
-                                    className: "absolute top-0 left-0 w-full h-full rounded-lg",
-                                    src: "https://www.youtube.com/embed/cYwepEKb2pE",
-                                    title: "BUZZY × TEDDYTWIST - Video Demostración",
-                                    frameBorder: "0",
-                                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-                                    allowFullScreen: true,
-                                    loading: "lazy"
-                                }, void 0, false, {
-                                    fileName: "[project]/components/product-specs.tsx",
-                                    lineNumber: 182,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/components/product-specs.tsx",
-                                lineNumber: 181,
-                                columnNumber: 13
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/components/product-specs.tsx",
-                        lineNumber: 176,
-                        columnNumber: 11
-                    }, this)
-                }, void 0, false, {
-                    fileName: "[project]/components/product-specs.tsx",
-                    lineNumber: 175,
-                    columnNumber: 9
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/components/product-specs.tsx",
-                lineNumber: 174,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
@@ -434,7 +392,7 @@ function ProductSpecs({ onAdoptClick }) {
                                         loading: "lazy"
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-specs.tsx",
-                                        lineNumber: 200,
+                                        lineNumber: 192,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -442,13 +400,13 @@ function ProductSpecs({ onAdoptClick }) {
                                         children: "TEDDYTWIST"
                                     }, void 0, false, {
                                         fileName: "[project]/components/product-specs.tsx",
-                                        lineNumber: 201,
+                                        lineNumber: 193,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/product-specs.tsx",
-                                lineNumber: 199,
+                                lineNumber: 191,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -456,29 +414,29 @@ function ProductSpecs({ onAdoptClick }) {
                                 children: "© 2025 TeddyTwist. Todos los derechos reservados."
                             }, void 0, false, {
                                 fileName: "[project]/components/product-specs.tsx",
-                                lineNumber: 203,
+                                lineNumber: 195,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/product-specs.tsx",
-                        lineNumber: 198,
+                        lineNumber: 190,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/product-specs.tsx",
-                    lineNumber: 197,
+                    lineNumber: 189,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/product-specs.tsx",
-                lineNumber: 196,
+                lineNumber: 188,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/product-specs.tsx",
-        lineNumber: 61,
+        lineNumber: 69,
         columnNumber: 5
     }, this);
 }

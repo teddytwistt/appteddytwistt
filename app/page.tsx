@@ -56,7 +56,7 @@ export default function HomePage() {
                 "@type": "Product",
                 "@id": "https://www.teddytwist.com/#product",
                 name: "BUZZY × TEDDYTWIST - Edición Limitada 001/900",
-                description: "Figura de colección edición limitada. Picador de cannabis premium con diseño exclusivo de TeddyTwist. Solo 900 unidades disponibles.",
+                description: "Figura de colección edición limitada. Grinder de cannabis premium con diseño exclusivo de TeddyTwist. Solo 900 unidades disponibles.",
                 brand: {
                   "@type": "Brand",
                   name: "TeddyTwist"
