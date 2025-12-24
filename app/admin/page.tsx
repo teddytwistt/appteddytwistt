@@ -125,13 +125,6 @@ export default function AdminPage() {
     return `hace ${hours}h`
   }
 
-  const isUrgentOrder = (order: PedidoCompleto) => {
-    if (order.estado_pago !== "pagado" || order.estado_envio !== "pendiente") return false
-    const orderDate = new Date(order.fecha_pago || order.fecha_creacion)
-    const hoursSincePaid = (new Date().getTime() - orderDate.getTime()) / (1000 * 60 * 60)
-    return hoursSincePaid > 48
-  }
-
   const applyFilters = () => {
     let filtered = [...orders]
 
@@ -475,10 +468,7 @@ export default function AdminPage() {
                     </TableRow>
                   ) : (
                     paginatedOrders.map((order) => (
-                      <TableRow
-                        key={order.id}
-                        className={isUrgentOrder(order) ? "bg-amber-50/30 dark:bg-amber-950/10 border-l-2 border-l-amber-500" : ""}
-                      >
+                      <TableRow key={order.id}>
                         <TableCell className="font-mono text-xs">
                           #{order.id}
                         </TableCell>
