@@ -210,6 +210,24 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
   const handleShippingSelection = (location: "cordoba" | "outside") => {
     setSelectedZone(location)
     setShowShippingForm(true)
+
+    // Si es Córdoba Capital, llenar automáticamente provincia, ciudad y código postal
+    if (location === "cordoba") {
+      setShippingFormData(prev => ({
+        ...prev,
+        provincia: "Córdoba",
+        ciudad: "Córdoba",
+        codigo_postal: "5000"
+      }))
+    } else {
+      // Si es fuera de Córdoba, limpiar esos campos
+      setShippingFormData(prev => ({
+        ...prev,
+        provincia: "",
+        ciudad: "",
+        codigo_postal: ""
+      }))
+    }
   }
 
   const handleShippingFormChange = (field: string, value: string) => {
@@ -593,6 +611,8 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                             value={shippingFormData.provincia}
                             onChange={(e) => handleShippingFormChange("provincia", e.target.value)}
                             placeholder="Ej: Buenos Aires"
+                            disabled={selectedZone === "cordoba"}
+                            className={selectedZone === "cordoba" ? "bg-muted cursor-not-allowed" : ""}
                           />
                         </div>
 
@@ -604,6 +624,8 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                             value={shippingFormData.ciudad}
                             onChange={(e) => handleShippingFormChange("ciudad", e.target.value)}
                             placeholder="Ej: Mar del Plata"
+                            disabled={selectedZone === "cordoba"}
+                            className={selectedZone === "cordoba" ? "bg-muted cursor-not-allowed" : ""}
                           />
                         </div>
 
@@ -615,6 +637,8 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                             value={shippingFormData.codigo_postal}
                             onChange={(e) => handleShippingFormChange("codigo_postal", e.target.value)}
                             placeholder="Ej: 5000"
+                            disabled={selectedZone === "cordoba"}
+                            className={selectedZone === "cordoba" ? "bg-muted cursor-not-allowed" : ""}
                           />
                         </div>
                       </div>

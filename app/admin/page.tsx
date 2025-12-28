@@ -561,14 +561,14 @@ export default function AdminPage() {
 
       {/* Modal de Detalles del Pedido */}
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
-          <DialogHeader className="flex-shrink-0">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col p-0">
+          <DialogHeader className="flex-shrink-0 px-6 pt-6">
             <DialogTitle>Detalles del Pedido #{selectedOrder?.id}</DialogTitle>
             <DialogDescription>Información completa del pedido</DialogDescription>
           </DialogHeader>
 
           {selectedOrder && (
-            <div className="space-y-6 overflow-y-auto pr-2 -mr-2 flex-1 min-h-0" style={{ overscrollBehavior: 'contain' }}>
+            <div className="space-y-6 overflow-y-auto px-6 pb-6 flex-1">
               {/* Información del Pedido */}
               <div className="space-y-3">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
