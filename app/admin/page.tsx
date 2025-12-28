@@ -23,6 +23,7 @@ import type { PedidoCompleto, StockStatus, Cliente } from "@/lib/types"
 import { formatArgentinaDateTime } from "@/lib/utils/timezone"
 import { DiscountStatistics, type DiscountStatisticsRef } from "@/components/admin/discount-statistics"
 import { GeneralStatistics, type GeneralStatisticsRef } from "@/components/admin/general-statistics"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 type TabType = "orders" | "discount-stats" | "general-stats"
 
@@ -561,14 +562,17 @@ export default function AdminPage() {
 
       {/* Modal de Detalles del Pedido */}
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-        <DialogContent className="max-w-2xl h-[90vh] !flex !flex-col p-0 gap-0">
-          <DialogHeader className="flex-shrink-0 px-6 pt-6 pb-4 border-b">
-            <DialogTitle>Detalles del Pedido #{selectedOrder?.id}</DialogTitle>
-            <DialogDescription>Información completa del pedido</DialogDescription>
-          </DialogHeader>
+        <DialogContent className="max-w-2xl p-0">
+          <div className="px-6 pt-6 pb-4 border-b">
+            <DialogHeader>
+              <DialogTitle>Detalles del Pedido #{selectedOrder?.id}</DialogTitle>
+              <DialogDescription>Información completa del pedido</DialogDescription>
+            </DialogHeader>
+          </div>
 
           {selectedOrder && (
-            <div className="space-y-6 overflow-y-auto px-6 py-6 flex-1 min-h-0">
+            <ScrollArea className="h-[calc(90vh-120px)]">
+              <div className="space-y-6 px-6 py-6">
               {/* Información del Pedido */}
               <div className="space-y-3">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
@@ -761,7 +765,8 @@ export default function AdminPage() {
                   <p className="text-sm bg-muted p-3 rounded-md">{selectedOrder.comentarios}</p>
                 </div>
               )}
-            </div>
+              </div>
+            </ScrollArea>
           )}
         </DialogContent>
       </Dialog>
