@@ -151,7 +151,10 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
           setSerialLoaded(true)
         })
     } else {
+      // Cuando se cierra el modal, resetear a la pantalla de selección de ubicación
       setSerialLoaded(false)
+      setShowShippingForm(false)
+      setSelectedZone(null)
     }
   }, [isShippingDialogOpen])
 
