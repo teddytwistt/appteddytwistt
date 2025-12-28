@@ -546,6 +546,7 @@ interface EmailConfirmacionCompletaProps {
   direccion: string
   ciudad: string
   provincia: string
+  codigoPostal: string
   telefono: string
   dni: string
 }
@@ -560,6 +561,7 @@ export function EmailConfirmacionCompleta({
   direccion,
   ciudad,
   provincia,
+  codigoPostal,
   telefono,
   dni,
 }: EmailConfirmacionCompletaProps): string {
@@ -947,7 +949,7 @@ export function EmailConfirmacionCompleta({
                 <div class="address-line"><strong>DNI:</strong> ${dni}</div>
                 <div class="address-line"><strong>Teléfono:</strong> ${telefono}</div>
                 <div class="address-line"><strong>Dirección:</strong> ${direccion}</div>
-                <div class="address-line"><strong>Localidad:</strong> ${ciudad}, ${provincia}</div>
+                <div class="address-line"><strong>Localidad:</strong> ${ciudad}, ${provincia} - CP ${codigoPostal}</div>
               </div>
             </div>
 

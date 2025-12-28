@@ -30,9 +30,6 @@ export interface Cliente {
   email: string
   telefono: string
   dni: string
-  provincia?: string
-  ciudad?: string
-  direccion_completa?: string
   created_at: string
   updated_at: string
 }
@@ -73,6 +70,12 @@ export interface Pedido {
   // Estados
   estado_pago: EstadoPago
   estado_envio: EstadoEnvio
+
+  // Dirección de envío (específica del pedido, puede cambiar por pedido)
+  provincia?: string
+  ciudad?: string
+  codigo_postal?: string
+  direccion_completa?: string
 
   // Adicional
   comentarios?: string

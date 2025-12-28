@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // Validate shipping data if provided
     if (shippingData) {
-      const requiredFields = ["nombre_apellido", "email", "telefono", "dni", "provincia", "ciudad", "direccion_completa"]
+      const requiredFields = ["nombre_apellido", "email", "telefono", "dni", "provincia", "ciudad", "codigo_postal", "direccion_completa"]
       const missingFields = requiredFields.filter(field => !shippingData[field])
 
       if (missingFields.length > 0) {

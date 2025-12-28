@@ -16,10 +16,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 import { useRealtimeStock } from "@/hooks/useRealtimeStock"
-import { getNombreProvincias, getLocalidadesByProvincia } from "@/lib/data/argentina-locations"
 
 export const ProductHero = forwardRef<{ openModal: () => void }>(function ProductHero(props, ref) {
   const [mounted, setMounted] = useState(false)
@@ -53,10 +51,10 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     dni: "",
     provincia: "",
     ciudad: "",
+    codigo_postal: "",
     direccion_completa: "",
     comentarios: "",
   })
-  const [localidadesDisponibles, setLocalidadesDisponibles] = useState<string[]>([])
 
   // Hook para obtener stock en tiempo real
   const { stockData } = useRealtimeStock()
@@ -209,17 +207,6 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     setDiscountError(null)
   }
 
-  // Set default values for Córdoba zone
-  useEffect(() => {
-    if (selectedZone === "cordoba") {
-      setShippingFormData(prev => ({
-        ...prev,
-        provincia: "Córdoba",
-        ciudad: "Córdoba"
-      }))
-    }
-  }, [selectedZone])
-
   const handleShippingSelection = (location: "cordoba" | "outside") => {
     setSelectedZone(location)
     setShowShippingForm(true)
@@ -227,13 +214,6 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
 
   const handleShippingFormChange = (field: string, value: string) => {
     setShippingFormData(prev => ({ ...prev, [field]: value }))
-
-    // Si cambió la provincia, actualizar las localidades disponibles y resetear ciudad
-    if (field === "provincia") {
-      const localidades = getLocalidadesByProvincia(value)
-      setLocalidadesDisponibles(localidades)
-      setShippingFormData(prev => ({ ...prev, ciudad: "" }))
-    }
   }
 
   const handleBackToZoneSelection = () => {
@@ -246,6 +226,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
       dni: "",
       provincia: "",
       ciudad: "",
+      codigo_postal: "",
       direccion_completa: "",
       comentarios: "",
     })
@@ -606,76 +587,48 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
 
                         <div className="space-y-2">
                           <Label htmlFor="provincia">Provincia *</Label>
-                          {selectedZone === "cordoba" ? (
-                            <Input
-                              id="provincia"
-                              required
-                              value="Córdoba"
-                              disabled
-                              className="bg-muted"
-                            />
-                          ) : (
-                            <Select
-                              value={shippingFormData.provincia}
-                              onValueChange={(value) => handleShippingFormChange("provincia", value)}
-                              required
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecciona tu provincia" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {getNombreProvincias().map((prov) => (
-                                  <SelectItem key={prov} value={prov}>
-                                    {prov}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          )}
+                          <Input
+                            id="provincia"
+                            required
+                            value={shippingFormData.provincia}
+                            onChange={(e) => handleShippingFormChange("provincia", e.target.value)}
+                            placeholder="Ej: Buenos Aires"
+                          />
                         </div>
 
                         <div className="space-y-2">
                           <Label htmlFor="ciudad">Ciudad / Localidad *</Label>
-                          {selectedZone === "cordoba" ? (
-                            <Input
-                              id="ciudad"
-                              required
-                              value="Córdoba"
-                              disabled
-                              className="bg-muted"
-                            />
-                          ) : (
-                            <Select
-                              value={shippingFormData.ciudad}
-                              onValueChange={(value) => handleShippingFormChange("ciudad", value)}
-                              required
-                              disabled={!shippingFormData.provincia}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder={shippingFormData.provincia ? "Selecciona tu localidad" : "Primero selecciona provincia"} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {localidadesDisponibles.map((localidad) => (
-                                  <SelectItem key={localidad} value={localidad}>
-                                    {localidad}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          )}
+                          <Input
+                            id="ciudad"
+                            required
+                            value={shippingFormData.ciudad}
+                            onChange={(e) => handleShippingFormChange("ciudad", e.target.value)}
+                            placeholder="Ej: Mar del Plata"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="codigo_postal">Código Postal *</Label>
+                          <Input
+                            id="codigo_postal"
+                            required
+                            value={shippingFormData.codigo_postal}
+                            onChange={(e) => handleShippingFormChange("codigo_postal", e.target.value)}
+                            placeholder="Ej: 5000"
+                          />
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="direccion_completa">
-                          Dirección completa (calle, número, piso/depto, código postal) *
+                          Dirección completa (calle, número, piso/depto) *
                         </Label>
                         <Input
                           id="direccion_completa"
                           required
                           value={shippingFormData.direccion_completa}
                           onChange={(e) => handleShippingFormChange("direccion_completa", e.target.value)}
-                          placeholder="Ej: Av. Colón 1234, Piso 5 Dto A, CP 5000"
+                          placeholder="Ej: Av. Colón 1234, Piso 5 Dto A"
                         />
                       </div>
 

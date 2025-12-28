@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
     const unidad = unidadReservada[0]
     console.log("[payment-validate] Unit reserved:", unidad.id_unidad, "Serial:", unidad.numero_serie)
 
-    // Crear el cliente si hay datos de envío en el metadata
+    // Crear el cliente con sus datos personales
     let idCliente = null
     if (metadata.shipping_data) {
       const shippingData = metadata.shipping_data
@@ -126,9 +126,6 @@ export async function GET(request: NextRequest) {
           email: shippingData.email,
           telefono: shippingData.telefono,
           dni: shippingData.dni,
-          provincia: shippingData.provincia,
-          ciudad: shippingData.ciudad,
-          direccion_completa: shippingData.direccion_completa,
         })
         .select()
         .single()
@@ -144,7 +141,10 @@ export async function GET(request: NextRequest) {
       console.log("[payment-validate] Client created:", idCliente)
     }
 
-    // Crear el pedido con el pago ya aprobado
+    // Preparar datos de dirección de envío para el pedido
+    const shippingData = metadata.shipping_data
+
+    // Crear el pedido con el pago ya aprobado y la dirección de envío
     const { data: orderData, error: orderError } = await supabase
       .from("pedidos")
       .insert({
@@ -161,7 +161,12 @@ export async function GET(request: NextRequest) {
         estado_pago: "pagado",
         estado_envio: "pendiente",
         id_codigo_descuento: metadata.id_codigo_descuento,
-        comentarios: metadata.shipping_data?.comentarios || null,
+        // Solo dirección de envío en el pedido (puede ser diferente por pedido)
+        provincia: shippingData?.provincia || null,
+        ciudad: shippingData?.ciudad || null,
+        codigo_postal: shippingData?.codigo_postal || null,
+        direccion_completa: shippingData?.direccion_completa || null,
+        comentarios: shippingData?.comentarios || null,
         fecha_pago: getArgentinaTimestamp(),
         mp_response: paymentData,
       })
@@ -205,6 +210,7 @@ export async function GET(request: NextRequest) {
           direccion: shippingData.direccion_completa,
           ciudad: shippingData.ciudad,
           provincia: shippingData.provincia,
+          codigoPostal: shippingData.codigo_postal,
           telefono: shippingData.telefono,
           dni: shippingData.dni,
         })

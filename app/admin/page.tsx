@@ -702,37 +702,51 @@ export default function AdminPage() {
                       <p className="text-muted-foreground">DNI</p>
                       <p>{selectedOrder.cliente.dni}</p>
                     </div>
-                    {selectedOrder.cliente.direccion_completa && (
-                      <div>
-                        <p className="text-muted-foreground flex items-center gap-2">
-                          <MapPin className="w-3 h-3" /> Dirección
-                        </p>
-                        <div className="flex items-start gap-2">
-                          <div className="flex-1">
-                            <p>{selectedOrder.cliente.direccion_completa}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Dirección de Envío */}
+              {selectedOrder.direccion_completa && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Dirección de Envío
+                  </h3>
+                  <div className="grid grid-cols-1 gap-3 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Dirección Completa</p>
+                      <div className="flex items-start gap-2">
+                        <div className="flex-1">
+                          <p className="font-medium">{selectedOrder.direccion_completa}</p>
+                          {(selectedOrder.ciudad || selectedOrder.provincia || selectedOrder.codigo_postal) && (
                             <p className="text-muted-foreground text-xs mt-1">
-                              {selectedOrder.cliente.ciudad}, {selectedOrder.cliente.provincia}
+                              {[selectedOrder.ciudad, selectedOrder.provincia].filter(Boolean).join(', ')}
+                              {selectedOrder.codigo_postal && ` - CP ${selectedOrder.codigo_postal}`}
                             </p>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 p-0 flex-shrink-0"
-                            onClick={() => copyToClipboard(
-                              `${selectedOrder.cliente!.direccion_completa}, ${selectedOrder.cliente!.ciudad}, ${selectedOrder.cliente!.provincia}`,
-                              "Dirección",
-                              `address-${selectedOrder.id}`
-                            )}
-                          >
-                            {copiedField === `address-${selectedOrder.id}` ? (
-                              <Check className="w-3 h-3 text-green-600" />
-                            ) : (
-                              <Copy className="w-3 h-3" />
-                            )}
-                          </Button>
+                          )}
                         </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 flex-shrink-0"
+                          onClick={() => {
+                            const fullAddress = [
+                              selectedOrder.direccion_completa,
+                              selectedOrder.ciudad && selectedOrder.provincia && `${selectedOrder.ciudad}, ${selectedOrder.provincia}`,
+                              selectedOrder.codigo_postal && `CP ${selectedOrder.codigo_postal}`
+                            ].filter(Boolean).join(', ')
+                            copyToClipboard(fullAddress, "Dirección", `address-${selectedOrder.id}`)
+                          }}
+                        >
+                          {copiedField === `address-${selectedOrder.id}` ? (
+                            <Check className="w-3 h-3 text-green-600" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </Button>
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               )}
