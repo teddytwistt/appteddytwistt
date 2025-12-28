@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
       dni,
       provincia,
       ciudad,
+      codigo_postal,
       direccion_completa,
       comentarios,
       comprobante_url,
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
       !dni ||
       !provincia ||
       !ciudad ||
+      !codigo_postal ||
       !direccion_completa
     ) {
       return NextResponse.json({ error: "Todos los campos son requeridos" }, { status: 400 })
@@ -69,7 +71,7 @@ export async function POST(request: NextRequest) {
       numeroSerie = unidad?.numero_serie
     }
 
-    // Crear el cliente con los datos del formulario
+    // Crear el cliente con los datos personales (sin dirección)
     const { data: clienteData, error: clienteError } = await supabase
       .from("clientes")
       .insert({
@@ -77,9 +79,6 @@ export async function POST(request: NextRequest) {
         email,
         telefono,
         dni,
-        provincia,
-        ciudad,
-        direccion_completa,
       })
       .select()
       .single()
@@ -91,11 +90,15 @@ export async function POST(request: NextRequest) {
 
     console.log("[shipping] Client created:", clienteData.id)
 
-    // Actualizar el pedido vinculándolo al cliente y agregando comentarios
+    // Actualizar el pedido con el cliente y la dirección de envío
     const { error: updateError } = await supabase
       .from("pedidos")
       .update({
         id_cliente: clienteData.id,
+        provincia,
+        ciudad,
+        codigo_postal,
+        direccion_completa,
         comentarios: comentarios || null,
       })
       .eq("id", orderData.id)
@@ -127,6 +130,7 @@ export async function POST(request: NextRequest) {
         direccion: direccion_completa,
         ciudad: ciudad,
         provincia: provincia,
+        codigoPostal: codigo_postal,
         telefono: telefono,
         dni: dni,
       })
