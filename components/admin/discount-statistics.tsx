@@ -215,6 +215,7 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
       })
 
       if (response.ok) {
+        alert("Código eliminado exitosamente")
         setIsDeleteModalOpen(false)
         setCodeToDelete(null)
         // Refresh the list from database
@@ -222,11 +223,12 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
       } else {
         const error = await response.json()
         console.error("[admin] Delete error:", error.error)
-        // Keep modal open to show the error wasn't successful
-        // User can try again or cancel
+        alert(error.error || "Error al eliminar el código de descuento")
+        // Keep modal open so user can see the error
       }
     } catch (error) {
       console.error("[admin] Error deleting discount code:", error)
+      alert("Error de conexión al eliminar el código")
       // Keep modal open on error
     } finally {
       setIsDeleting(false)
