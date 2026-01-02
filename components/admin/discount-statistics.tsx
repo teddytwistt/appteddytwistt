@@ -87,7 +87,10 @@ export const DiscountStatistics = forwardRef<DiscountStatisticsRef>((props, ref)
   }, [])
 
   const fetchStats = async () => {
-    setIsLoading(true)
+    // Only show loading spinner on initial load (when stats is null)
+    if (!stats) {
+      setIsLoading(true)
+    }
     try {
       const response = await fetch("/api/admin/discount-stats")
       const data = await response.json()

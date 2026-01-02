@@ -74,7 +74,10 @@ export const GeneralStatistics = forwardRef<GeneralStatisticsRef>((props, ref) =
   }, [viewMode, offset])
 
   const fetchStats = async () => {
-    setIsLoading(true)
+    // Only show loading spinner on initial load (when stats is null)
+    if (!stats) {
+      setIsLoading(true)
+    }
     try {
       const response = await fetch(`/api/admin/general-stats?viewMode=${viewMode}&offset=${offset}`)
       const data = await response.json()
