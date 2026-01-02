@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server-admin"
 import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function PATCH(
@@ -11,7 +11,7 @@ export async function PATCH(
   if (!auth.authorized) return auth.response
 
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
     const { id } = await params
     const body = await request.json()
 
@@ -66,7 +66,7 @@ export async function DELETE(
   if (!auth.authorized) return auth.response
 
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
     const { id } = await params
 
     // Check if the code has been used in any orders

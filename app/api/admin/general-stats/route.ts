@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server-admin"
 import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function GET(request: Request) {
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   if (!auth.authorized) return auth.response
 
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
 
     // Get view mode and offset from query parameters
     const { searchParams } = new URL(request.url)

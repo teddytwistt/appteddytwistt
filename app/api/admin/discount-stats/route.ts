@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server-admin"
 import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function GET() {
@@ -8,7 +8,7 @@ export async function GET() {
   if (!auth.authorized) return auth.response
 
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
 
     // Fetch all discount codes with their basic info
     const { data: discountCodes, error: codesError } = await supabase

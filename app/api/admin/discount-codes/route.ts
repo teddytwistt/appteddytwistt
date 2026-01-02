@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server-admin"
 import { checkAdminAuth } from "@/lib/auth/check-admin"
 
 export async function POST(request: Request) {
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   if (!auth.authorized) return auth.response
 
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
     const body = await request.json()
 
     const {
