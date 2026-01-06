@@ -135,6 +135,12 @@ cwebp -q 80 public/images/04.png -o public/images/04.webp
 | **Peso inicial (Mobile)** | ~6MB | **~2.5MB** ✅ |
 | **Videos totales** | 5.7MB | **2.1MB** ✅ (63% reducción) |
 
+## ✅ Ambiente Dev Configurado
+
+**Proyecto Dev deployado en**: https://appteddytwistt-dev.vercel.app
+**Rama**: `dev`
+**Auto-deploy**: Activado ✓
+
 ## Verificación
 
 ### En Local
