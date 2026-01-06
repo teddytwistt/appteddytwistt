@@ -4,6 +4,7 @@ import { Space_Grotesk } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { SmoothScroll } from "@/components/smooth-scroll"
+import MetaPixel from "@/components/meta-pixel"
 import "./globals.css"
 
 // Updated fonts for urban/street aesthetic
@@ -73,6 +74,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${spaceGrotesk.className} font-sans antialiased`}>
+        <MetaPixel />
         <SmoothScroll />
         {children}
         <Analytics />
