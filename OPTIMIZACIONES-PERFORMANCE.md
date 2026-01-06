@@ -87,24 +87,41 @@ Mejorar el Real Experience Score (RES) de Vercel de 75 a +90 en dispositivos mó
 - No bloquea renderizado inicial
 - Reduce latencia de conexión a servidores externos
 
-## Próximos Pasos Sugeridos (Opcionales)
+## 5. Compresión de Videos ✅ COMPLETADO
 
-### Comprimir Videos
+### Videos Optimizados (Commit: 8d42481)
+
+**Configuración aplicada:**
 ```bash
-# Reducir video principal de 3.1MB a ~1MB
-ffmpeg -i video_principal_web.mp4 -vcodec h264 -crf 28 video_principal_compressed.mp4
+# video_principal_web.mp4
+ffmpeg -i video_principal_web.mp4 -vf "scale=1080:1350" -c:v libx264 -crf 23 -preset slow -movflags +faststart -an video_principal_web_optimized.mp4
 
-# Reducir video de animación
-ffmpeg -i animation_teddytwist.mp4 -vcodec h264 -crf 28 animation_compressed.mp4
+# animation_teddytwist.mp4
+ffmpeg -i animation_teddytwist.mp4 -vf "scale=1080:1350" -c:v libx264 -crf 23 -preset slow -movflags +faststart -an animation_teddytwist_optimized.mp4
 ```
+
+**Resultados:**
+- video_principal_web.mp4: 3.1MB → **1.1MB** (65% reducción)
+- animation_teddytwist.mp4: 2.6MB → **1.0MB** (62% reducción)
+- **Total ahorrado: 3.6MB** (63% reducción)
+
+**Especificaciones técnicas:**
+- Resolución: 1440x1800 → 1080x1350
+- Codec: H.264 (libx264)
+- CRF: 23 (calidad visualmente sin pérdida)
+- Bitrate: ~900 kbits/s (desde ~2400 kbits/s)
+- Preset: slow (mejor compresión)
+- Flags: +faststart (streaming optimizado)
+
+### Próximos Pasos Opcionales
 
 ### Convertir PNGs Restantes a WebP
 ```bash
-# Convertir PNGs grandes
-cwebp -q 80 01.png -o 01.webp
-cwebp -q 80 02.png -o 02.webp
-cwebp -q 80 03.png -o 03.webp
-cwebp -q 80 04.png -o 04.webp
+# Convertir PNGs grandes (01.png: 860KB, 04.png: 740KB, etc)
+cwebp -q 80 public/images/01.png -o public/images/01.webp
+cwebp -q 80 public/images/02.png -o public/images/02.webp
+cwebp -q 80 public/images/03.png -o public/images/03.webp
+cwebp -q 80 public/images/04.png -o public/images/04.webp
 ```
 
 ## Impacto Esperado
@@ -115,7 +132,8 @@ cwebp -q 80 04.png -o 04.webp
 | **First Contentful Paint (FCP)** | ~2.5s | ~1.2s |
 | **Largest Contentful Paint (LCP)** | ~3.5s | ~1.8s |
 | **Total Blocking Time (TBT)** | ~400ms | ~150ms |
-| **Peso inicial (Mobile)** | ~6MB | ~2.5MB |
+| **Peso inicial (Mobile)** | ~6MB | **~2.5MB** ✅ |
+| **Videos totales** | 5.7MB | **2.1MB** ✅ (63% reducción) |
 
 ## Verificación
 
