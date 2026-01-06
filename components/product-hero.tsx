@@ -326,6 +326,7 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                   loop
                   muted
                   playsInline
+                  preload="metadata"
                   className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                 />
               ) : isHovering ? (
@@ -335,13 +336,15 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
                   loop
                   muted
                   playsInline
+                  preload="none"
                   className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
                 />
               ) : (
                 <img
-                  src="/images/screenshot001.png"
+                  src="/images/screenshot001.webp"
                   alt="BUZZY × TEDDYTWIST Limited Edition"
                   className="w-full h-auto max-h-[60vh] sm:max-h-none object-contain"
+                  loading="eager"
                 />
               )}
             </div>

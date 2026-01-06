@@ -32,7 +32,7 @@ export function ProductGallery() {
             {/* Video Section - Left */}
             <div className="space-y-3 sm:space-y-4">
               <div className="relative w-full bg-card border border-border rounded-lg overflow-hidden max-h-[60vh] sm:max-h-none">
-                <video ref={videoRef} className="w-full h-auto object-contain" autoPlay loop muted playsInline>
+                <video ref={videoRef} className="w-full h-auto object-contain" autoPlay loop muted playsInline preload="none">
                   <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/video_review_buzzy-Hu7QjQNz5Pz4uAq7mwU27MrAURcA05.mp4" type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
