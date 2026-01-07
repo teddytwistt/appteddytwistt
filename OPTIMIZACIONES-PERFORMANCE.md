@@ -140,6 +140,12 @@ cwebp -q 80 public/images/04.png -o public/images/04.webp
 **Proyecto Dev deployado en**: https://appteddytwistt-dev.vercel.app
 **Rama**: `dev`
 **Auto-deploy**: Activado ✓
+**Ignored Build Step**: Configurado (solo deploya rama dev)
+
+### Warnings Resueltos
+- ✅ Directorio `.next` removido del tracking
+- ✅ Dependencia `fluent-ffmpeg` eliminada
+- ✅ Middleware renombrado a `proxy.ts`
 
 ## Verificación
 
