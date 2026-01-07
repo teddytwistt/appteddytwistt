@@ -161,3 +161,4 @@ npm run dev
 - [Vercel Speed Insights](https://vercel.com/docs/speed-insights)
 - [Next.js Script Optimization](https://nextjs.org/docs/app/building-your-application/optimizing/scripts)
 - [Video Preload Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#preload)
+
