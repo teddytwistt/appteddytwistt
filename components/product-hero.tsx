@@ -1,5 +1,11 @@
 "use client"
 
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void
+  }
+}
+
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AlertCircle, Instagram, ChevronDown, MessageCircle, Tag, X, ArrowLeft } from "lucide-react"
@@ -257,6 +263,11 @@ export const ProductHero = forwardRef<{ openModal: () => void }>(function Produc
     e.preventDefault()
     setIsProcessing(true)
     setError(null)
+
+    // Meta Pixel: track InitiateCheckout
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', 'InitiateCheckout')
+    }
 
     try {
       const zona = selectedZone === "cordoba" ? "cba" : "interior"
