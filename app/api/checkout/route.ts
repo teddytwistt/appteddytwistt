@@ -58,13 +58,30 @@ export async function POST(request: NextRequest) {
     const montoOriginal = zona === "cba" ? producto.precio_cba : producto.precio_interior
     let montoDescuento = 0
     let montoFinal = montoOriginal
+    let validatedDiscountPercentage: number | null = null
+    let validatedDiscountId: number | null = null
+    let validatedDiscountCode: string | null = null
 
-    if (discountPercentage && discountPercentage > 0) {
-      montoDescuento = Math.round((montoOriginal * discountPercentage) / 100)
-      montoFinal = montoOriginal - montoDescuento
-      console.log(
-        `[checkout] Discount applied: ${discountPercentage}% - Original: $${montoOriginal}, Descuento: $${montoDescuento}, Final: $${montoFinal}`
-      )
+    // Re-validar descuento en el servidor (nunca confiar en el cliente)
+    if (discountCode && typeof discountCode === "string" && discountCode.trim()) {
+      const { data: discountData, error: discountError } = await supabase.rpc("validar_codigo_descuento", {
+        p_codigo: discountCode.toUpperCase(),
+      })
+
+      const resultado = Array.isArray(discountData) ? discountData[0] : discountData
+
+      if (!discountError && resultado && resultado.valido) {
+        validatedDiscountPercentage = resultado.porcentaje
+        validatedDiscountId = resultado.id_descuento
+        validatedDiscountCode = discountCode.toUpperCase()
+        montoDescuento = Math.round((montoOriginal * validatedDiscountPercentage!) / 100)
+        montoFinal = montoOriginal - montoDescuento
+        console.log(
+          `[checkout] Discount validated and applied: ${validatedDiscountPercentage}% - Original: $${montoOriginal}, Descuento: $${montoDescuento}, Final: $${montoFinal}`
+        )
+      } else {
+        console.log(`[checkout] Invalid discount code rejected: ${discountCode}`)
+      }
     }
 
     // Crear preferencia de Mercado Pago con metadata para crear el pedido después del pago
@@ -72,9 +89,9 @@ export async function POST(request: NextRequest) {
       zona,
       montoFinal,
       montoOriginal,
-      discountCode,
-      discountPercentage,
-      idDescuento,
+      validatedDiscountCode,
+      validatedDiscountPercentage,
+      validatedDiscountId,
       shippingData
     )
 
