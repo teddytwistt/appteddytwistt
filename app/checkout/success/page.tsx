@@ -1,5 +1,11 @@
 "use client"
 
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void
+  }
+}
+
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,6 +38,14 @@ function SuccessPageContent() {
           setValidationStatus("success")
           setValidationMessage(data.message)
           setOrderData(data.pedido)
+
+          // Meta Pixel: track Purchase
+          if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+            window.fbq('track', 'Purchase', {
+              value: data.pedido?.monto_final || 0,
+              currency: 'ARS',
+            })
+          }
         } else {
           setValidationStatus("error")
           setValidationMessage(data.message || "El pago no pudo ser validado")
