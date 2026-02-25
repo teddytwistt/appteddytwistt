@@ -10,71 +10,115 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, Loader2, XCircle } from "lucide-react"
+import { CheckCircle2, Loader2, XCircle, Clock } from "lucide-react"
+
+const MAX_RETRIES = 10
+const RETRY_INTERVAL_MS = 2000
 
 function SuccessPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const [validationStatus, setValidationStatus] = useState<"loading" | "success" | "error">("loading")
-  const [validationMessage, setValidationMessage] = useState("")
+  const [status, setStatus] = useState<"loading" | "success" | "timeout" | "error">("loading")
+  const [errorMessage, setErrorMessage] = useState("")
   const [orderData, setOrderData] = useState<any>(null)
 
   useEffect(() => {
-    const validatePayment = async () => {
-      const paymentId = searchParams.get("payment_id")
-      const preferenceId = searchParams.get("preference_id")
+    const paymentId = searchParams.get("payment_id")
 
-      if (!paymentId || !preferenceId) {
-        setValidationStatus("error")
-        setValidationMessage("Faltan parámetros de pago")
-        return
-      }
+    if (!paymentId) {
+      setStatus("error")
+      setErrorMessage("Faltan parámetros de pago")
+      return
+    }
 
+    let attempt = 0
+
+    const pollOrder = async () => {
+      attempt++
       try {
-        const response = await fetch(`/api/payment/validate?payment_id=${paymentId}&preference_id=${preferenceId}`)
+        const response = await fetch(`/api/payment/validate?payment_id=${paymentId}`)
         const data = await response.json()
 
-        if (data.success) {
-          setValidationStatus("success")
-          setValidationMessage(data.message)
+        if (data.success && data.pedido) {
+          setStatus("success")
           setOrderData(data.pedido)
 
-          // Meta Pixel: track Purchase
-          if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-            window.fbq('track', 'Purchase', {
+          if (typeof window !== "undefined" && typeof window.fbq === "function") {
+            window.fbq("track", "Purchase", {
               value: data.pedido?.monto_final || 0,
-              currency: 'ARS',
+              currency: "ARS",
             })
           }
-        } else {
-          setValidationStatus("error")
-          setValidationMessage(data.message || "El pago no pudo ser validado")
+          return
         }
+
+        if (data.processing && attempt < MAX_RETRIES) {
+          setTimeout(pollOrder, RETRY_INTERVAL_MS)
+          return
+        }
+
+        if (data.processing && attempt >= MAX_RETRIES) {
+          setStatus("timeout")
+          return
+        }
+
+        setStatus("error")
+        setErrorMessage(data.error || "El pago no pudo ser validado")
       } catch (error) {
-        console.error("[success] Validation error:", error)
-        setValidationStatus("error")
-        setValidationMessage("Error al validar el pago")
+        console.error("[success] Polling error:", error)
+        if (attempt < MAX_RETRIES) {
+          setTimeout(pollOrder, RETRY_INTERVAL_MS)
+        } else {
+          setStatus("error")
+          setErrorMessage("Error al validar el pago")
+        }
       }
     }
 
-    validatePayment()
+    pollOrder()
   }, [searchParams])
 
-  if (validationStatus === "loading") {
+  if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 flex flex-col items-center gap-4">
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
             <p className="text-lg font-semibold">Validando tu pago...</p>
-            <p className="text-sm text-muted-foreground text-center">Por favor espera mientras verificamos tu compra</p>
+            <p className="text-sm text-muted-foreground text-center">
+              Por favor espera mientras verificamos tu compra
+            </p>
           </CardContent>
         </Card>
       </div>
     )
   }
 
-  if (validationStatus === "error") {
+  if (status === "timeout") {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <div className="flex justify-center mb-4">
+              <Clock className="w-16 h-16 text-yellow-500" />
+            </div>
+            <CardTitle className="text-center text-2xl">Pago recibido</CardTitle>
+            <CardDescription className="text-center">
+              Tu pago fue procesado correctamente. Estamos confirmando tu pedido, recibirás un
+              correo con todos los detalles en unos minutos.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => router.push("/")} className="w-full">
+              Volver al inicio
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (status === "error") {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <Card className="w-full max-w-md">
@@ -83,7 +127,7 @@ function SuccessPageContent() {
               <XCircle className="w-16 h-16 text-red-500" />
             </div>
             <CardTitle className="text-center text-2xl">Error en el pago</CardTitle>
-            <CardDescription className="text-center">{validationMessage}</CardDescription>
+            <CardDescription className="text-center">{errorMessage}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => router.push("/")} className="w-full">
@@ -104,7 +148,8 @@ function SuccessPageContent() {
           </div>
           <CardTitle className="text-center text-2xl">¡Compra completada!</CardTitle>
           <CardDescription className="text-center">
-            Tu pedido ha sido registrado exitosamente. Recibirás un correo con los detalles de tu compra.
+            Tu pedido ha sido registrado exitosamente. Recibirás un correo con los detalles de tu
+            compra.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -116,22 +161,29 @@ function SuccessPageContent() {
             {orderData?.numero_serie && (
               <div>
                 <p className="text-sm font-semibold">Número de serie:</p>
-                <p className="text-lg font-mono">{String(orderData.numero_serie).padStart(3, "0")}/900</p>
+                <p className="text-lg font-mono">
+                  {String(orderData.numero_serie).padStart(3, "0")}/900
+                </p>
               </div>
             )}
             <div>
               <p className="text-sm font-semibold">Zona:</p>
-              <p className="text-base">{orderData?.zona === "cba" ? "Córdoba Capital - Envío gratuito" : "Resto del país - Envío incluido"}</p>
+              <p className="text-base">
+                {orderData?.zona === "cba"
+                  ? "Córdoba Capital - Envío gratuito"
+                  : "Resto del país - Envío incluido"}
+              </p>
             </div>
             <div>
               <p className="text-sm font-semibold">Monto pagado:</p>
-              <p className="text-lg font-bold text-primary">${orderData?.monto_final?.toLocaleString("es-AR")}</p>
+              <p className="text-lg font-bold text-primary">
+                ${orderData?.monto_final?.toLocaleString("es-AR")}
+              </p>
             </div>
           </div>
           <p className="text-sm text-muted-foreground text-center">
             Recibirás tu Buzzy Twist en 3-5 días hábiles. ¡Gracias por tu compra!
           </p>
-
           <Button onClick={() => router.push("/")} className="w-full">
             Volver al inicio
           </Button>

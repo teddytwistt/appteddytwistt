@@ -169,6 +169,7 @@ async function createMercadoPagoPreference(
       pending: `${formUrl}/checkout/pending`,
     },
     auto_return: "approved",
+    notification_url: `${formUrl}/api/webhooks/mercadopago`,
     external_reference: zona,
     statement_descriptor: "BUZZY TWIST",
     payment_methods: {
