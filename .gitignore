@@ -28,3 +28,10 @@ yarn-error.log*
 Thumbs.db
 .vercel
 .env*.local
+
+# Large source assets (not for git)
+sequencer_comprimido/
+public/videos/*.mp4
+
+# Playwright
+.playwright-mcp/
