@@ -67,7 +67,7 @@ export function AnimationCanvas({ containerRef }: { containerRef: React.RefObjec
     const images = new Array(TOTAL_FRAMES).fill(null) as (HTMLImageElement | null)[]
     for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image()
-      img.src = `/videos/frames/frame_${String(i + 1).padStart(4, "0")}.png`
+      img.src = `/_next/image?url=%2Fvideos%2Fframes%2Fframe_${String(i + 1).padStart(4, "0")}.png&w=1080&q=85`
       const onDone = () => {
         loadedCount++
         setLoadProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100))
