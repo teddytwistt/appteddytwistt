@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     siteName: "TeddyTwist",
     images: [
       {
-        url: "/images/logo-alpha.webp",
+        url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "BUZZY × TEDDYTWIST Logo",
+        alt: "BUZZY × TEDDYTWIST - Edición Limitada 001/900",
       },
     ],
   },
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BUZZY × TEDDYTWIST - Edición Limitada",
     description: "Figura de colección edición limitada 001/900",
-    images: ["/images/logo-alpha.webp"],
+    images: ["/images/og-image.jpg"],
     creator: "@teddytwist_",
   },
   robots: {
