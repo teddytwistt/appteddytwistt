@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 
 const AnimationCanvas = dynamic(
@@ -10,12 +10,19 @@ const AnimationCanvas = dynamic(
 
 export function BuzzyStory() {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 1024)
+  }, [])
+
+  if (!isDesktop) return null
 
   return (
     <section
       ref={sectionRef}
       style={{ minHeight: "300vh" }}
-      className="relative border-t border-border hidden lg:block"
+      className="relative border-t border-border"
     >
       <div className="sticky top-0 h-screen flex items-center overflow-visible">
         <div className="w-full max-w-7xl mx-auto px-4">
